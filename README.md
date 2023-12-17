@@ -59,21 +59,31 @@ Please ensure you have these dependencies installed before building the project.
 
 ## Getting Started
 
-To get started with Engine, follow these steps:
-
-1. Clone this repository:
+#### Linux & macOS
 
 ```bash
-git clone https://github.com/xorz57/Engine.git
-cd Engine
+git clone https://github.com/microsoft/vcpkg.git ~/vcpkg
+~/vcpkg/bootstrap-vcpkg.sh
+
+git clone https://github.com/xorz57/ParticleDynamics.git
+cd ParticleDynamics
+cmake -B build -DCMAKE_BUILD_TYPE=Release -S . -DCMAKE_TOOLCHAIN_FILE=~/vcpkg/scripts/buildsystems/vcpkg.cmake
+cmake --build build --config Release
+ctest --build-config Release
 ```
 
-2. Build the project using [CMake](https://cmake.org/):
+#### Windows
 
-```bash
-cmake -B build
+```powershell
+git clone https://github.com/microsoft/vcpkg.git C:/vcpkg
+C:/vcpkg/bootstrap-vcpkg.bat
+C:/vcpkg/vcpkg.exe integrate install
+
+git clone https://github.com/xorz57/ParticleDynamics.git
+cd ParticleDynamics
+cmake -B build -DCMAKE_BUILD_TYPE=Release -S . -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake
 cmake --build build --config Release
-ctest -C Release
+ctest --build-config Release
 ```
 
 ## License

@@ -1,4 +1,3 @@
-<div align="center"><img src="https://github.com/xorz57/Engine/assets/84932056/7fe6a908-8481-4844-a205-7b6144f528f1"></div>
 <h1 align="center">Particle Dynamics</h1>
 
 <div align="center">

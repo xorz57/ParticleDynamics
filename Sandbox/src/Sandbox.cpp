@@ -10,7 +10,7 @@ std::unique_ptr<Engine::Application> Engine::CreateApplication() {
     applicationSettings.width = 600U;
     applicationSettings.height = 600U;
     applicationSettings.title = "Sandbox";
-    applicationSettings.fixedDeltaTime = 1.0f / 128.0f;
+    applicationSettings.fixedDeltaTime = 1.0f / 300.0f;
     applicationSettings.timeScale = 1.0f;
     return std::make_unique<Sandbox>(applicationSettings);
 }

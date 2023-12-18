@@ -24,7 +24,7 @@ set(SOURCES src/Application.cpp
             src/Spring.cpp)
 
 add_library(${PROJECT_NAME} ${SOURCES})
-add_library(ParticleDynamics::Engine ALIAS ${PROJECT_NAME})
+add_library(ParticlePhysics::Engine ALIAS ${PROJECT_NAME})
 
 target_include_directories(${PROJECT_NAME} PUBLIC include)
 

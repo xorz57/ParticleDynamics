@@ -19,8 +19,8 @@ set(SOURCES src/Sandbox.cpp
             src/SoftBody3.cpp)
 
 add_executable(${PROJECT_NAME} ${SOURCES})
-add_executable(ParticleDynamics::Sandbox ALIAS ${PROJECT_NAME})
+add_executable(ParticlePhysics::Sandbox ALIAS ${PROJECT_NAME})
 
 target_include_directories(${PROJECT_NAME} PUBLIC include)
 
-target_link_libraries(${PROJECT_NAME} PRIVATE ParticleDynamics::Engine)
+target_link_libraries(${PROJECT_NAME} PRIVATE ParticlePhysics::Engine)

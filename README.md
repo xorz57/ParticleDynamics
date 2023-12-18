@@ -1,4 +1,4 @@
-<h1 align="center">Particle Dynamics</h1>
+<h1 align="center">Particle Physics</h1>
 
 <div align="center">
     <a href="https://sonarcloud.io/summary/new_code?id=xorz57_ParticlePhysics">

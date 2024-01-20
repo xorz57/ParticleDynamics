@@ -1,6 +1,5 @@
 #include "Application.hpp"
 #include "Logging.hpp"
-#include "Sandbox.hpp"
 
 #include <cstdlib>
 #include <memory>
@@ -12,7 +11,7 @@ std::unique_ptr<Application> CreateApplication() {
     applicationSettings.title = "Sandbox";
     applicationSettings.fixedDeltaTime = 1.0f / 64.0f;
     applicationSettings.timeScale = 4.0f;
-    return std::make_unique<Sandbox>(applicationSettings);
+    return std::make_unique<Application>(applicationSettings);
 }
 
 int main() {

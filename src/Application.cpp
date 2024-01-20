@@ -77,7 +77,7 @@ void Application::Run() {
         window.clear(sf::Color(25, 25, 25));
         mLayerStack.Render(window);
 
-        ImGui::Begin("Settings");
+        ImGui::Begin("Statistics");
         ImGui::Text("deltaTime      : %.5lf", deltaTime.asSeconds());
         ImGui::Text("fixedDeltaTime : %.5lf", fixedDeltaTime.asSeconds());
         ImGui::End();

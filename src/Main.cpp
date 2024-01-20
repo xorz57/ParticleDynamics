@@ -1,5 +1,3 @@
-#pragma once
-
 #include "Application.hpp"
 #include "Logging.hpp"
 

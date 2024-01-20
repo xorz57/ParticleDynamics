@@ -21,6 +21,7 @@ set(SOURCES src/Application.cpp
             src/Layer.cpp
             src/LayerStack.cpp
             src/Logging.cpp
+            src/Main.cpp
             src/Particle.cpp
             src/Sandbox.cpp
             src/SandboxLayer.cpp

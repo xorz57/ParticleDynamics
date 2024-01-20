@@ -1,4 +1,4 @@
-#include "SandboxLayer.hpp"
+#include "World.hpp"
 #include "Particle.hpp"
 #include "Spring.hpp"
 #include "DoubleSpringPendulum.hpp"
@@ -16,9 +16,9 @@
 
 #include <implot.h>
 
-SandboxLayer::SandboxLayer(std::string name) : Layer(std::move(name)) {}
+World::World(std::string name) : Layer(std::move(name)) {}
 
-void SandboxLayer::OnAttach() {
+void World::OnAttach() {
     mSoftBodies.emplace_back(std::make_unique<SoftBody1>(glm::vec2(100.0f, 100.0f), 50.0f, 2.0f, 4.0f));
     mSoftBodies.emplace_back(std::make_unique<SoftBody2>(glm::vec2(300.0f, 200.0f), 50.0f, 2.0f, 4.0f));
     mSoftBodies.emplace_back(std::make_unique<SoftBody3>(glm::vec2(500.0f, 300.0f), 50.0f, 2.0f, 4.0f, 8));
@@ -26,11 +26,11 @@ void SandboxLayer::OnAttach() {
     mSoftBodies.emplace_back(std::make_unique<DoubleSpringPendulum>(glm::vec2(200.0f, 0.0f), 50.0f, 2.0f, 4.0f));
 }
 
-void SandboxLayer::OnDetach() {
+void World::OnDetach() {
     mSoftBodies.clear();
 }
 
-void SandboxLayer::OnFixedUpdate(float dt) {
+void World::OnFixedUpdate(float dt) {
     for (const std::unique_ptr<SoftBody> &softBody: mSoftBodies) {
         for (Spring &spring: softBody->springs) {
             const glm::vec2 dPosition = spring.mParticle2.position - spring.mParticle1.position;
@@ -55,15 +55,15 @@ void SandboxLayer::OnFixedUpdate(float dt) {
     }
 }
 
-void SandboxLayer::OnUpdate(float dt) {
+void World::OnUpdate(float dt) {
     // ...
 }
 
-void SandboxLayer::OnLateUpdate(float dt) {
+void World::OnLateUpdate(float dt) {
     // ...
 }
 
-void SandboxLayer::OnRender(sf::RenderWindow &window) {
+void World::OnRender(sf::RenderWindow &window) {
     for (const std::unique_ptr<SoftBody> &softBody: mSoftBodies) {
         for (const Spring &spring: softBody->springs) {
             sf::VertexArray line(sf::Lines, 2);

@@ -1,5 +1,5 @@
 #include "Application.hpp"
-#include "SandboxLayer.hpp"
+#include "World.hpp"
 
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/System/Time.hpp>
@@ -14,7 +14,7 @@
 #include <implot.h>
 
 Application::Application(ApplicationSettings applicationSettings) : mApplicationSettings(std::move(applicationSettings)) {
-    PushLayer(std::make_unique<SandboxLayer>("SandboxLayer"));
+    PushLayer(std::make_unique<World>("World"));
 }
 
 void Application::PushLayer(std::unique_ptr<Layer> layer) {

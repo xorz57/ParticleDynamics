@@ -23,7 +23,7 @@ set(SOURCES src/Application.cpp
             src/Logging.cpp
             src/Main.cpp
             src/Particle.cpp
-            src/SandboxLayer.cpp
+            src/World.cpp
             src/SoftBody1.cpp
             src/SoftBody2.cpp
             src/SoftBody3.cpp

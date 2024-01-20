@@ -6,9 +6,9 @@
 #include <memory>
 #include <vector>
 
-class SandboxLayer : public Layer {
+class World : public Layer {
 public:
-    explicit SandboxLayer(std::string name);
+    explicit World(std::string name);
     void OnAttach() override;
     void OnDetach() override;
     void OnFixedUpdate(float dt) override;

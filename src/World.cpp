@@ -19,11 +19,11 @@
 World::World(std::string name) : Layer(std::move(name)) {}
 
 void World::OnAttach() {
+    mSoftBodies.emplace_back(std::make_unique<DoubleSpringPendulum>(glm::vec2(200.0f, 0.0f), 50.0f, 2.0f, 4.0f));
     mSoftBodies.emplace_back(std::make_unique<SoftBody1>(glm::vec2(100.0f, 100.0f), 50.0f, 2.0f, 4.0f));
     mSoftBodies.emplace_back(std::make_unique<SoftBody2>(glm::vec2(300.0f, 200.0f), 50.0f, 2.0f, 4.0f));
     mSoftBodies.emplace_back(std::make_unique<SoftBody3>(glm::vec2(500.0f, 300.0f), 50.0f, 2.0f, 4.0f, 8));
     mSoftBodies.emplace_back(std::make_unique<SpringPendulum>(glm::vec2(400.0f, 0.0f), 100.0f, 2.0f, 4.0f));
-    mSoftBodies.emplace_back(std::make_unique<DoubleSpringPendulum>(glm::vec2(200.0f, 0.0f), 50.0f, 2.0f, 4.0f));
 }
 
 void World::OnDetach() {

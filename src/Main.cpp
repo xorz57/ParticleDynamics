@@ -14,7 +14,7 @@ int main() {
     applicationSettings.fixedDeltaTime = 1.0f / 128.0f;
     applicationSettings.timeScale = 4.0f;
 
-    std::unique_ptr<Application> application = std::make_unique<Application>(applicationSettings);
+    auto application = std::make_unique<Application>(applicationSettings);
 
     application->Run();
 

@@ -91,7 +91,7 @@ This project is licensed under the [MIT License](LICENSE).
 
 ## Acknowledgments
 
-We would like to express our gratitude to the authors and maintainers of the libraries and tools that Engine depends on. Their work is greatly appreciated.
+We would like to express our gratitude to the authors and maintainers of the libraries and tools that ParticlePhysics depends on. Their work is greatly appreciated.
 
 ## Contact
 

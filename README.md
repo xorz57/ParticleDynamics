@@ -46,7 +46,7 @@
 
 ## Dependencies
 
-Engine relies on the following libraries:
+ParticlePhysics relies on the following libraries:
 
 - [spdlog](https://github.com/gabime/spdlog)
 - [glm](https://github.com/g-truc/glm)

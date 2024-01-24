@@ -13,6 +13,7 @@
 #include <SFML/System/Time.hpp>
 #include <SFML/Window/ContextSettings.hpp>
 #include <SFML/Window/Event.hpp>
+#include <SFML/Window/VideoMode.hpp>
 #include <SFML/Window/WindowStyle.hpp>
 
 #define IMGUI_DEFINE_MATH_OPERATORS
@@ -30,6 +31,8 @@ Application::Application(ApplicationSettings applicationSettings) : mApplication
 }
 
 void Application::Run() {
+    sf::VideoMode mode(mApplicationSettings.width, mApplicationSettings.height);
+
     sf::ContextSettings settings;
     settings.depthBits = 24U;
     settings.stencilBits = 8U;
@@ -37,7 +40,7 @@ void Application::Run() {
     settings.majorVersion = 3U;
     settings.minorVersion = 0U;
 
-    sf::RenderWindow window({mApplicationSettings.width, mApplicationSettings.height}, mApplicationSettings.title, sf::Style::Default, settings);
+    sf::RenderWindow window(mode, mApplicationSettings.title, sf::Style::Default, settings);
     window.setFramerateLimit(120U);
 
     sf::View view = window.getDefaultView();
@@ -51,7 +54,7 @@ void Application::Run() {
     sf::Time accumulator = sf::Time::Zero;
     sf::Clock deltaClock;
     while (window.isOpen()) {
-        sf::Event event{};
+        sf::Event event = sf::Event();
         while (window.pollEvent(event)) {
             ImGui::SFML::ProcessEvent(window, event);
             switch (event.type) {

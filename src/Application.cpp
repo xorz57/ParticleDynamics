@@ -54,7 +54,7 @@ void Application::Run() {
     sf::Time accumulator = sf::Time::Zero;
     sf::Clock deltaClock;
     while (window.isOpen()) {
-        sf::Event event = sf::Event();
+        sf::Event event{};
         while (window.pollEvent(event)) {
             ImGui::SFML::ProcessEvent(window, event);
             switch (event.type) {
@@ -73,7 +73,7 @@ void Application::Run() {
         const sf::Time deltaTime = deltaClock.restart();
         accumulator += timeScale * deltaTime;
         while (accumulator > fixedDeltaTime) {
-            float dt = fixedDeltaTime.asSeconds();
+            const float dt = fixedDeltaTime.asSeconds();
             for (SoftBody &softBody: mSoftBodies) {
                 for (Spring &spring: softBody.springs) {
                     const glm::vec2 dPosition = spring.mParticle2.position - spring.mParticle1.position;

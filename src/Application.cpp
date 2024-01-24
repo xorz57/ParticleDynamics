@@ -1,28 +1,32 @@
 #include "Application.hpp"
-#include "World.hpp"
+#include "DoubleSpringPendulum.hpp"
+#include "Particle.hpp"
+#include "SoftBody1.hpp"
+#include "SoftBody2.hpp"
+#include "SoftBody3.hpp"
+#include "Spring.hpp"
+#include "SpringPendulum.hpp"
 
+#include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/Graphics/VertexArray.hpp>
 #include <SFML/System/Time.hpp>
 #include <SFML/Window/ContextSettings.hpp>
 #include <SFML/Window/Event.hpp>
 #include <SFML/Window/WindowStyle.hpp>
 
 #define IMGUI_DEFINE_MATH_OPERATORS
-#include <imgui.h>
 #include <imgui-SFML.h>
+#include <imgui.h>
 
 #include <implot.h>
 
 Application::Application(ApplicationSettings applicationSettings) : mApplicationSettings(std::move(applicationSettings)) {
-    PushLayer(std::make_unique<World>("World"));
-}
-
-void Application::PushLayer(std::unique_ptr<Layer> layer) {
-    mLayerStack.Push(std::move(layer));
-}
-
-void Application::PopLayer() {
-    mLayerStack.Pop();
+    mSoftBodies.emplace_back(std::make_unique<DoubleSpringPendulum>(glm::vec2(200.0f, 0.0f), 50.0f, 2.0f, 4.0f));
+    mSoftBodies.emplace_back(std::make_unique<SoftBody1>(glm::vec2(100.0f, 100.0f), 50.0f, 2.0f, 4.0f));
+    mSoftBodies.emplace_back(std::make_unique<SoftBody2>(glm::vec2(300.0f, 200.0f), 50.0f, 2.0f, 4.0f));
+    mSoftBodies.emplace_back(std::make_unique<SoftBody3>(glm::vec2(500.0f, 300.0f), 50.0f, 2.0f, 4.0f, 8));
+    mSoftBodies.emplace_back(std::make_unique<SpringPendulum>(glm::vec2(400.0f, 0.0f), 100.0f, 2.0f, 4.0f));
 }
 
 void Application::Run() {
@@ -66,16 +70,56 @@ void Application::Run() {
         const sf::Time deltaTime = deltaClock.restart();
         accumulator += timeScale * deltaTime;
         while (accumulator > fixedDeltaTime) {
-            mLayerStack.FixedUpdate(fixedDeltaTime.asSeconds());
+            float dt = fixedDeltaTime.asSeconds();
+            for (const std::unique_ptr<SoftBody> &softBody: mSoftBodies) {
+                for (Spring &spring: softBody->springs) {
+                    const glm::vec2 dPosition = spring.mParticle2.position - spring.mParticle1.position;
+                    const glm::vec2 dVelocity = spring.mParticle2.velocity - spring.mParticle1.velocity;
+                    if (glm::length(dPosition) != 0) {
+                        const glm::vec2 force = spring.mSpringConstant * (glm::length(dPosition) - spring.mRestLength) * glm::normalize(dPosition) + spring.mDampingConstant * dVelocity;
+                        spring.mParticle1.force += force;
+                        spring.mParticle2.force -= force;
+                    }
+                }
+                for (Particle &particle: softBody->particles) {
+                    const glm::vec2 gravitationalForce = particle.mass * mGravitationalAcceleration;
+                    particle.force += gravitationalForce;
+                    if (!particle.pinned) {
+                        particle.HandleBoundaryCollisions();
+                        const glm::vec2 acceleration = particle.force / particle.mass;
+                        particle.velocity += acceleration * dt;
+                        particle.position += particle.velocity * dt;
+                    }
+                    particle.force = glm::vec2(0.0f, 0.0f);
+                }
+            }
             accumulator -= fixedDeltaTime;
         }
 
         ImGui::SFML::Update(window, deltaTime);
 
-        mLayerStack.Update(deltaTime.asSeconds());
-        mLayerStack.LateUpdate(deltaTime.asSeconds());
         window.clear(sf::Color(25, 25, 25));
-        mLayerStack.Render(window);
+
+        for (const std::unique_ptr<SoftBody> &softBody: mSoftBodies) {
+            for (const Spring &spring: softBody->springs) {
+                sf::VertexArray line(sf::Lines, 2);
+                line[0].position.x = spring.mParticle1.position.x;
+                line[0].position.y = spring.mParticle1.position.y;
+                line[1].position.x = spring.mParticle2.position.x;
+                line[1].position.y = spring.mParticle2.position.y;
+                line[0].color = sf::Color(206, 208, 206);
+                line[1].color = sf::Color(206, 208, 206);
+                window.draw(line);
+            }
+            for (const Particle &particle: softBody->particles) {
+                sf::CircleShape shape;
+                shape.setRadius(particle.radius);
+                shape.setOrigin(particle.radius, particle.radius);
+                shape.setPosition(particle.position.x, particle.position.y);
+                shape.setFillColor(sf::Color(230, 232, 230));
+                window.draw(shape);
+            }
+        }
 
         ImGui::Begin("Statistics");
         ImGui::Text("deltaTime      : %.5lf", deltaTime.asSeconds());
@@ -86,7 +130,6 @@ void Application::Run() {
 
         window.display();
     }
-    mLayerStack.Clear();
 
     ImPlot::DestroyContext();
 

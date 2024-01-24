@@ -1,17 +1,17 @@
 #pragma once
 
 #include "ApplicationSettings.hpp"
-#include "LayerStack.hpp"
+#include "SoftBody.hpp"
+
+#include <memory>
 
 class Application {
 public:
     explicit Application(ApplicationSettings applicationSettings);
-    virtual ~Application() = default;
-    void PushLayer(std::unique_ptr<Layer> layer);
-    void PopLayer();
     void Run();
 
 private:
     ApplicationSettings mApplicationSettings;
-    LayerStack mLayerStack;
+    glm::vec2 mGravitationalAcceleration{0.0f, 10.0f};
+    std::vector<std::unique_ptr<SoftBody>> mSoftBodies;
 };

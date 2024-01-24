@@ -18,12 +18,9 @@ find_package(implot REQUIRED)
 
 set(SOURCES src/Application.cpp
             src/DoubleSpringPendulum.cpp
-            src/Layer.cpp
-            src/LayerStack.cpp
             src/Logging.cpp
             src/Main.cpp
             src/Particle.cpp
-            src/World.cpp
             src/SoftBody1.cpp
             src/SoftBody2.cpp
             src/SoftBody3.cpp

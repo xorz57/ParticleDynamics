@@ -63,7 +63,7 @@ void Application::Run() {
     ImPlot::CreateContext();
 
     const sf::Time fixedDeltaTime = sf::seconds(1.0f / 128.0f);
-    const float timeScale = 4.0f;
+    float timeScale = 5.0f;
     sf::Time accumulator = sf::Time::Zero;
     sf::Clock deltaClock;
     while (window.isOpen()) {
@@ -116,11 +116,11 @@ void Application::Run() {
             }
         }
 
-        ImGui::Begin("Statistics");
-        ImGui::Text("timeScale       : %.5f", timeScale);
+        ImGui::Begin("Settings");
+        ImGui::SliderFloat("timeScale", &timeScale, 0.0f, 10.0f);
+        ImGui::Text("fixedDeltaTime  : %.5f", fixedDeltaTime.asSeconds());
         ImGui::Text("deltaTime       : %.5f", deltaTime.asSeconds());
         ImGui::Text("scaledDeltaTime : %.5f", scaledDeltaTime.asSeconds());
-        ImGui::Text("fixedDeltaTime  : %.5f", fixedDeltaTime.asSeconds());
         ImGui::End();
 
         ImGui::SFML::Render(window);

@@ -34,14 +34,14 @@ void Application::Run() {
     sf::VideoMode mode(mApplicationSettings.width, mApplicationSettings.height);
 
     sf::ContextSettings settings;
-    settings.depthBits = 24U;
-    settings.stencilBits = 8U;
-    settings.antialiasingLevel = 8U;
-    settings.majorVersion = 3U;
-    settings.minorVersion = 0U;
+    settings.depthBits = 24u;
+    settings.stencilBits = 8u;
+    settings.antialiasingLevel = 8u;
+    settings.majorVersion = 3u;
+    settings.minorVersion = 0u;
 
     sf::RenderWindow window(mode, mApplicationSettings.title, sf::Style::Default, settings);
-    window.setFramerateLimit(120U);
+    window.setFramerateLimit(120u);
 
     sf::View view = window.getDefaultView();
 

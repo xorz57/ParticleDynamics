@@ -2,10 +2,12 @@
 
 #include "SoftBody.hpp"
 
+#include <SFML/System/Time.hpp>
+
 class Application {
 public:
     Application();
-    void FixedUpdate(float fixedDeltaTime);
+    void FixedUpdate(const sf::Time &fixedDeltaTime);
     void Run();
 
 private:

@@ -10,7 +10,6 @@
 #include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/VertexArray.hpp>
-#include <SFML/System/Time.hpp>
 #include <SFML/Window/ContextSettings.hpp>
 #include <SFML/Window/Event.hpp>
 #include <SFML/Window/VideoMode.hpp>
@@ -30,7 +29,8 @@ Application::Application() {
     mSoftBodies.emplace_back(SpringPendulum(glm::vec2(400.0f, 0.0f), 100.0f, 2.0f, 4.0f));
 }
 
-void Application::FixedUpdate(float fixedDeltaTime) {
+void Application::FixedUpdate(const sf::Time &fixedDeltaTime) {
+    const float dt = fixedDeltaTime.asSeconds();
     for (SoftBody &softBody: mSoftBodies) {
         for (Spring &spring: softBody.springs) {
             const glm::vec2 dPosition = spring.mParticle2.position - spring.mParticle1.position;
@@ -47,8 +47,8 @@ void Application::FixedUpdate(float fixedDeltaTime) {
             if (!particle.pinned) {
                 particle.HandleBoundaryCollisions();
                 const glm::vec2 acceleration = particle.force / particle.mass;
-                particle.velocity += acceleration * fixedDeltaTime;
-                particle.position += particle.velocity * fixedDeltaTime;
+                particle.velocity += acceleration * dt;
+                particle.position += particle.velocity * dt;
             }
             particle.force = glm::vec2(0.0f, 0.0f);
         }
@@ -96,7 +96,7 @@ void Application::Run() {
         const sf::Time deltaTime = deltaClock.restart();
         accumulator += timeScale * deltaTime;
         while (accumulator > fixedDeltaTime) {
-            FixedUpdate(fixedDeltaTime.asSeconds());
+            FixedUpdate(fixedDeltaTime);
             accumulator -= fixedDeltaTime;
         }
 

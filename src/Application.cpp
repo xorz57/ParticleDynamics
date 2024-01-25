@@ -56,14 +56,12 @@ void Application::FixedUpdate(const sf::Time &fixedDeltaTime) {
 }
 
 void Application::Run() {
-    sf::ContextSettings settings;
-    settings.depthBits = 24u;
-    settings.stencilBits = 8u;
-    settings.antialiasingLevel = 8u;
-    settings.majorVersion = 3u;
-    settings.minorVersion = 0u;
+    sf::VideoMode mode{600u, 600u};
+    sf::String title{"ParticlePhysics"};
+    sf::Uint32 style{sf::Style::Default};
+    sf::ContextSettings settings{24u, 8u, 8u, 3u, 3u};
 
-    sf::RenderWindow window({600u, 600u}, "ParticlePhysics", sf::Style::Default, settings);
+    sf::RenderWindow window(mode, title, style, settings);
     window.setFramerateLimit(120u);
 
     sf::View view = window.getDefaultView();

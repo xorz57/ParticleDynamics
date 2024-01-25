@@ -10,10 +10,7 @@
 #include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/VertexArray.hpp>
-#include <SFML/Window/ContextSettings.hpp>
 #include <SFML/Window/Event.hpp>
-#include <SFML/Window/VideoMode.hpp>
-#include <SFML/Window/WindowStyle.hpp>
 
 #define IMGUI_DEFINE_MATH_OPERATORS
 #include <imgui-SFML.h>
@@ -56,12 +53,7 @@ void Application::FixedUpdate(const sf::Time &fixedDeltaTime) {
 }
 
 void Application::Run() {
-    sf::VideoMode mode{600u, 600u};
-    sf::String title{"ParticlePhysics"};
-    sf::Uint32 style{sf::Style::Default};
-    sf::ContextSettings settings{24u, 8u, 8u, 3u, 3u};
-
-    sf::RenderWindow window(mode, title, style, settings);
+    sf::RenderWindow window(mMode, mTitle, mStyle, mSettings);
     window.setFramerateLimit(120u);
 
     sf::View view = window.getDefaultView();

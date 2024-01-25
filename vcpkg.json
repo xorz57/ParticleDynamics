@@ -1,5 +1,5 @@
 {
-  "name": "particle-dynamics",
+  "name": "particle-physics",
   "version-string": "0.1.0",
   "dependencies": [
     "spdlog",

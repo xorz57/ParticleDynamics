@@ -43,7 +43,7 @@ void Application::FixedUpdate(const sf::Time &fixedDeltaTime) {
             particle.force += gravitationalForce;
             if (!particle.pinned) {
                 particle.HandleBoundaryCollisions();
-                const glm::vec2 acceleration = particle.force / particle.mass;
+                const glm::vec2 acceleration = particle.force * (1.0f / particle.mass);
                 particle.velocity += acceleration * dt;
                 particle.position += particle.velocity * dt;
             }

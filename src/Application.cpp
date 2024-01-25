@@ -30,6 +30,31 @@ Application::Application(ApplicationSettings applicationSettings) : mApplication
     mSoftBodies.emplace_back(SpringPendulum(glm::vec2(400.0f, 0.0f), 100.0f, 2.0f, 4.0f));
 }
 
+void Application::fixedUpdate(float fixedDeltaTime) {
+    for (SoftBody &softBody: mSoftBodies) {
+        for (Spring &spring: softBody.springs) {
+            const glm::vec2 dPosition = spring.mParticle2.position - spring.mParticle1.position;
+            const glm::vec2 dVelocity = spring.mParticle2.velocity - spring.mParticle1.velocity;
+            if (glm::length(dPosition) != 0) {
+                const glm::vec2 force = spring.mSpringConstant * (glm::length(dPosition) - spring.mRestLength) * glm::normalize(dPosition) + spring.mDampingConstant * dVelocity;
+                spring.mParticle1.force += force;
+                spring.mParticle2.force -= force;
+            }
+        }
+        for (Particle &particle: softBody.particles) {
+            const glm::vec2 gravitationalForce = particle.mass * mGravitationalAcceleration;
+            particle.force += gravitationalForce;
+            if (!particle.pinned) {
+                particle.HandleBoundaryCollisions();
+                const glm::vec2 acceleration = particle.force / particle.mass;
+                particle.velocity += acceleration * fixedDeltaTime;
+                particle.position += particle.velocity * fixedDeltaTime;
+            }
+            particle.force = glm::vec2(0.0f, 0.0f);
+        }
+    }
+}
+
 void Application::Run() {
     sf::VideoMode mode(mApplicationSettings.width, mApplicationSettings.height);
 
@@ -73,29 +98,7 @@ void Application::Run() {
         const sf::Time deltaTime = deltaClock.restart();
         accumulator += timeScale * deltaTime;
         while (accumulator > fixedDeltaTime) {
-            const float dt = fixedDeltaTime.asSeconds();
-            for (SoftBody &softBody: mSoftBodies) {
-                for (Spring &spring: softBody.springs) {
-                    const glm::vec2 dPosition = spring.mParticle2.position - spring.mParticle1.position;
-                    const glm::vec2 dVelocity = spring.mParticle2.velocity - spring.mParticle1.velocity;
-                    if (glm::length(dPosition) != 0) {
-                        const glm::vec2 force = spring.mSpringConstant * (glm::length(dPosition) - spring.mRestLength) * glm::normalize(dPosition) + spring.mDampingConstant * dVelocity;
-                        spring.mParticle1.force += force;
-                        spring.mParticle2.force -= force;
-                    }
-                }
-                for (Particle &particle: softBody.particles) {
-                    const glm::vec2 gravitationalForce = particle.mass * mGravitationalAcceleration;
-                    particle.force += gravitationalForce;
-                    if (!particle.pinned) {
-                        particle.HandleBoundaryCollisions();
-                        const glm::vec2 acceleration = particle.force / particle.mass;
-                        particle.velocity += acceleration * dt;
-                        particle.position += particle.velocity * dt;
-                    }
-                    particle.force = glm::vec2(0.0f, 0.0f);
-                }
-            }
+            fixedUpdate(fixedDeltaTime.asSeconds());
             accumulator -= fixedDeltaTime;
         }
 

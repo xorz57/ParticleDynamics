@@ -6,6 +6,7 @@
 class Application {
 public:
     explicit Application(ApplicationSettings applicationSettings);
+    void fixedUpdate(float fixedDeltaTime);
     void Run();
 
 private:

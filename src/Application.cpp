@@ -84,7 +84,8 @@ void Application::Run() {
         }
 
         const sf::Time deltaTime = deltaClock.restart();
-        accumulator += timeScale * deltaTime;
+        const sf::Time scaledDeltaTime = timeScale * deltaTime;
+        accumulator += scaledDeltaTime;
         while (accumulator > fixedDeltaTime) {
             FixedUpdate(fixedDeltaTime);
             accumulator -= fixedDeltaTime;
@@ -116,8 +117,10 @@ void Application::Run() {
         }
 
         ImGui::Begin("Statistics");
-        ImGui::Text("deltaTime      : %.5lf", deltaTime.asSeconds());
-        ImGui::Text("fixedDeltaTime : %.5lf", fixedDeltaTime.asSeconds());
+        ImGui::Text("timeScale       : %.5f", timeScale);
+        ImGui::Text("deltaTime       : %.5f", deltaTime.asSeconds());
+        ImGui::Text("scaledDeltaTime : %.5f", scaledDeltaTime.asSeconds());
+        ImGui::Text("fixedDeltaTime  : %.5f", fixedDeltaTime.asSeconds());
         ImGui::End();
 
         ImGui::SFML::Render(window);

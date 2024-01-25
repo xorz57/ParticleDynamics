@@ -22,7 +22,7 @@
 
 #include <implot.h>
 
-Application::Application(ApplicationSettings applicationSettings) : mApplicationSettings(std::move(applicationSettings)) {
+Application::Application() {
     mSoftBodies.emplace_back(DoubleSpringPendulum(glm::vec2(200.0f, 0.0f), 50.0f, 2.0f, 4.0f));
     mSoftBodies.emplace_back(SoftBody1(glm::vec2(100.0f, 100.0f), 50.0f, 2.0f, 4.0f));
     mSoftBodies.emplace_back(SoftBody2(glm::vec2(300.0f, 200.0f), 50.0f, 2.0f, 4.0f));
@@ -30,7 +30,7 @@ Application::Application(ApplicationSettings applicationSettings) : mApplication
     mSoftBodies.emplace_back(SpringPendulum(glm::vec2(400.0f, 0.0f), 100.0f, 2.0f, 4.0f));
 }
 
-void Application::fixedUpdate(float fixedDeltaTime) {
+void Application::FixedUpdate(float fixedDeltaTime) {
     for (SoftBody &softBody: mSoftBodies) {
         for (Spring &spring: softBody.springs) {
             const glm::vec2 dPosition = spring.mParticle2.position - spring.mParticle1.position;
@@ -56,8 +56,6 @@ void Application::fixedUpdate(float fixedDeltaTime) {
 }
 
 void Application::Run() {
-    sf::VideoMode mode(mApplicationSettings.width, mApplicationSettings.height);
-
     sf::ContextSettings settings;
     settings.depthBits = 24u;
     settings.stencilBits = 8u;
@@ -65,7 +63,7 @@ void Application::Run() {
     settings.majorVersion = 3u;
     settings.minorVersion = 0u;
 
-    sf::RenderWindow window(mode, mApplicationSettings.title, sf::Style::Default, settings);
+    sf::RenderWindow window({600u, 600u}, "ParticlePhysics", sf::Style::Default, settings);
     window.setFramerateLimit(120u);
 
     sf::View view = window.getDefaultView();
@@ -74,8 +72,8 @@ void Application::Run() {
 
     ImPlot::CreateContext();
 
-    const sf::Time fixedDeltaTime = sf::seconds(mApplicationSettings.fixedDeltaTime);
-    const float timeScale = mApplicationSettings.timeScale;
+    const sf::Time fixedDeltaTime = sf::seconds(1.0f / 128.0f);
+    const float timeScale = 4.0f;
     sf::Time accumulator = sf::Time::Zero;
     sf::Clock deltaClock;
     while (window.isOpen()) {
@@ -98,7 +96,7 @@ void Application::Run() {
         const sf::Time deltaTime = deltaClock.restart();
         accumulator += timeScale * deltaTime;
         while (accumulator > fixedDeltaTime) {
-            fixedUpdate(fixedDeltaTime.asSeconds());
+            FixedUpdate(fixedDeltaTime.asSeconds());
             accumulator -= fixedDeltaTime;
         }
 

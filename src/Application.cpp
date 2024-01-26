@@ -16,6 +16,8 @@
 #include <imgui-SFML.h>
 #include <imgui.h>
 
+#include <glm/gtc/type_ptr.hpp>
+
 Application::Application() {
     mSoftBodies.emplace_back(DoubleSpringPendulum(glm::vec2(200.0f, 0.0f), 50.0f, 2.0f, 4.0f));
     mSoftBodies.emplace_back(SoftBody1(glm::vec2(100.0f, 100.0f), 50.0f, 2.0f, 4.0f));
@@ -113,7 +115,8 @@ void Application::Run() {
         }
 
         ImGui::Begin("Settings");
-        ImGui::SliderFloat("Time Scale", &timeScale, 0.0f, 10.0f);
+        ImGui::DragFloat2("Gravity", glm::value_ptr(mGravitationalAcceleration), 0.1f, -9.8f, 9.8f);
+        ImGui::DragFloat("Time Scale", &timeScale, 0.1f, 0.0f, 10.0f);
         ImGui::Text("Fixed Delta Time  : %.5f", fixedDeltaTime.asSeconds());
         ImGui::Text("Delta Time        : %.5f", deltaTime.asSeconds());
         ImGui::Text("Scaled Delta Time : %.5f", scaledDeltaTime.asSeconds());

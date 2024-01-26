@@ -117,10 +117,10 @@ void Application::Run() {
         }
 
         ImGui::Begin("Settings");
-        ImGui::SliderFloat("timeScale", &timeScale, 0.0f, 10.0f);
-        ImGui::Text("fixedDeltaTime  : %.5f", fixedDeltaTime.asSeconds());
-        ImGui::Text("deltaTime       : %.5f", deltaTime.asSeconds());
-        ImGui::Text("scaledDeltaTime : %.5f", scaledDeltaTime.asSeconds());
+        ImGui::SliderFloat("Time Scale", &timeScale, 0.0f, 10.0f);
+        ImGui::Text("Fixed Delta Time  : %.5f", fixedDeltaTime.asSeconds());
+        ImGui::Text("Delta Time        : %.5f", deltaTime.asSeconds());
+        ImGui::Text("Scaled Delta Time : %.5f", scaledDeltaTime.asSeconds());
         ImGui::End();
 
         ImGui::SFML::Render(window);

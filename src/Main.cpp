@@ -5,9 +5,7 @@
 
 int main() {
     Logging::Init();
-
     Application application;
     application.Run();
-
     return EXIT_SUCCESS;
 }

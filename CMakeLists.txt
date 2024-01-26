@@ -16,15 +16,11 @@ find_package(SFML 2.5.0 COMPONENTS system window graphics REQUIRED)
 find_package(ImGui-SFML REQUIRED)
 
 set(SOURCES src/Application.cpp
-            src/DoubleSpringPendulum.cpp
+            src/Cloth.cpp
             src/Logging.cpp
             src/Main.cpp
             src/Particle.cpp
-            src/SoftBody1.cpp
-            src/SoftBody2.cpp
-            src/SoftBody3.cpp
-            src/Spring.cpp
-            src/SpringPendulum.cpp)
+            src/Spring.cpp)
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 

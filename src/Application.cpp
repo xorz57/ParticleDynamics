@@ -1,11 +1,7 @@
 #include "Application.hpp"
-#include "DoubleSpringPendulum.hpp"
+#include "Cloth.hpp"
 #include "Particle.hpp"
-#include "SoftBody1.hpp"
-#include "SoftBody2.hpp"
-#include "SoftBody3.hpp"
 #include "Spring.hpp"
-#include "SpringPendulum.hpp"
 
 #include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
@@ -19,11 +15,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 Application::Application() {
-    mSoftBodies.emplace_back(DoubleSpringPendulum(glm::vec2(200.0f, 0.0f), 50.0f, 2.0f, 4.0f));
-    mSoftBodies.emplace_back(SoftBody1(glm::vec2(100.0f, 100.0f), 50.0f, 2.0f, 4.0f));
-    mSoftBodies.emplace_back(SoftBody2(glm::vec2(300.0f, 200.0f), 50.0f, 2.0f, 4.0f));
-    mSoftBodies.emplace_back(SoftBody3(glm::vec2(500.0f, 300.0f), 50.0f, 2.0f, 4.0f, 8));
-    mSoftBodies.emplace_back(SpringPendulum(glm::vec2(400.0f, 0.0f), 100.0f, 2.0f, 4.0f));
+    mSoftBodies.emplace_back(Cloth({50.0f, 50.0f}, 8u, 11u, 50.0f));
 }
 
 void Application::FixedUpdate(const sf::Time &fixedDeltaTime) {
@@ -42,7 +34,6 @@ void Application::FixedUpdate(const sf::Time &fixedDeltaTime) {
             const glm::vec2 gravitationalForce = particle.mass * mGravitationalAcceleration;
             particle.force += gravitationalForce;
             if (!particle.pinned) {
-                particle.HandleBoundaryCollisions();
                 const glm::vec2 acceleration = particle.force * (1.0f / particle.mass);
                 particle.velocity += acceleration * dt;
                 particle.position += particle.velocity * dt;
@@ -60,7 +51,7 @@ void Application::Run() {
 
     (void) ImGui::SFML::Init(window);
 
-    const sf::Time fixedDeltaTime = sf::seconds(1.0f / 128.0f);
+    const sf::Time fixedDeltaTime = sf::seconds(1.0f / 64.0f);
     float timeScale = 5.0f;
     sf::Time accumulator = sf::Time::Zero;
     sf::Clock deltaClock;
@@ -83,6 +74,7 @@ void Application::Run() {
 
         const sf::Time deltaTime = deltaClock.restart();
         const sf::Time scaledDeltaTime = timeScale * deltaTime;
+
         accumulator += scaledDeltaTime;
         while (accumulator > fixedDeltaTime) {
             FixedUpdate(fixedDeltaTime);
@@ -117,9 +109,14 @@ void Application::Run() {
         ImGui::Begin("Settings");
         ImGui::DragFloat2("Gravity", glm::value_ptr(mGravitationalAcceleration), 0.1f, -9.8f, 9.8f);
         ImGui::DragFloat("Time Scale", &timeScale, 0.1f, 0.0f, 10.0f);
-        ImGui::Text("Fixed Delta Time  : %.5f", fixedDeltaTime.asSeconds());
-        ImGui::Text("Delta Time        : %.5f", deltaTime.asSeconds());
-        ImGui::Text("Scaled Delta Time : %.5f", scaledDeltaTime.asSeconds());
+        ImGui::End();
+
+        ImGui::Begin("Statistics");
+        ImGui::Text("FPS               : %3.f", 1.0f / deltaTime.asSeconds());
+        ImGui::Text("Tick Rate         : %3.f", 1.0f / fixedDeltaTime.asSeconds());
+        ImGui::Text("Fixed Delta Time  : %3d ms", fixedDeltaTime.asMilliseconds());
+        ImGui::Text("Delta Time        : %3d ms", deltaTime.asMilliseconds());
+        ImGui::Text("Scaled Delta Time : %3d ms", scaledDeltaTime.asMilliseconds());
         ImGui::End();
 
         ImGui::SFML::Render(window);

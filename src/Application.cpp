@@ -16,8 +16,6 @@
 #include <imgui-SFML.h>
 #include <imgui.h>
 
-#include <implot.h>
-
 Application::Application() {
     mSoftBodies.emplace_back(DoubleSpringPendulum(glm::vec2(200.0f, 0.0f), 50.0f, 2.0f, 4.0f));
     mSoftBodies.emplace_back(SoftBody1(glm::vec2(100.0f, 100.0f), 50.0f, 2.0f, 4.0f));
@@ -59,8 +57,6 @@ void Application::Run() {
     sf::View view = window.getDefaultView();
 
     (void) ImGui::SFML::Init(window);
-
-    ImPlot::CreateContext();
 
     const sf::Time fixedDeltaTime = sf::seconds(1.0f / 128.0f);
     float timeScale = 5.0f;
@@ -127,8 +123,6 @@ void Application::Run() {
 
         window.display();
     }
-
-    ImPlot::DestroyContext();
 
     ImGui::SFML::Shutdown();
 }

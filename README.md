@@ -34,7 +34,6 @@ ParticlePhysics relies on the following libraries:
 - [glm](https://github.com/g-truc/glm)
 - [SFML](https://github.com/SFML/SFML)
 - [ImGui-SFML](https://github.com/SFML/imgui-sfml)
-- [implot](https://github.com/epezent/implot)
 
 Please ensure you have these dependencies installed before building the project.
 

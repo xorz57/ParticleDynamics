@@ -14,7 +14,6 @@ find_package(spdlog REQUIRED)
 find_package(glm REQUIRED)
 find_package(SFML 2.5.0 COMPONENTS system window graphics REQUIRED)
 find_package(ImGui-SFML REQUIRED)
-find_package(implot REQUIRED)
 
 set(SOURCES src/Application.cpp
             src/DoubleSpringPendulum.cpp
@@ -35,4 +34,3 @@ target_link_libraries(${PROJECT_NAME} PRIVATE spdlog::spdlog)
 target_link_libraries(${PROJECT_NAME} PRIVATE glm::glm)
 target_link_libraries(${PROJECT_NAME} PRIVATE sfml-system sfml-window sfml-graphics)
 target_link_libraries(${PROJECT_NAME} PRIVATE ImGui-SFML::ImGui-SFML)
-target_link_libraries(${PROJECT_NAME} PRIVATE implot::implot)

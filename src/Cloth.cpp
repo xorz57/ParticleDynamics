@@ -4,7 +4,7 @@ Cloth::Cloth(const glm::vec2 &position, unsigned int rows, unsigned int cols, fl
     for (unsigned int row = 0; row < rows; ++row) {
         for (unsigned int col = 0; col < cols; ++col) {
             const bool pinned = (row == 0) ? true : false;
-            particles.emplace_back(position + padding * glm::vec2(col, row), 2.0f, 4.0f, pinned);
+            particles.emplace_back(position + padding * glm::vec2(col, row), 1.0f, 4.0f, pinned);
         }
     }
 

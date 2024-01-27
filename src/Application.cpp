@@ -15,7 +15,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 Application::Application() {
-    mSoftBodies.emplace_back(Cloth({50.0f, 50.0f}, 8u, 11u, 50.0f));
+    mSoftBodies.emplace_back(Cloth({25.0f, 25.0f}, 23u, 23u, 25.0f));
 }
 
 void Application::FixedUpdate(const sf::Time &fixedDeltaTime) {
@@ -99,16 +99,18 @@ void Application::Run() {
             }
         }
 
-        if (mGrabbedSoftBodyIndex != -1 && mGrabbedParticleIndex != -1) {
-            const sf::Vector2f worldMousePosition = window.mapPixelToCoords(sf::Mouse::getPosition(window));
-            mSoftBodies[mGrabbedSoftBodyIndex].particles[mGrabbedParticleIndex].position = glm::vec2(worldMousePosition.x, worldMousePosition.y);
-        }
-
         const sf::Time deltaTime = deltaClock.restart();
         const sf::Time scaledDeltaTime = timeScale * deltaTime;
 
         accumulator += scaledDeltaTime;
         while (accumulator > fixedDeltaTime) {
+            if (mGrabbedSoftBodyIndex != -1 && mGrabbedParticleIndex != -1) {
+                const sf::Vector2f worldMousePosition = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+                Particle &grabbedParticle = mSoftBodies[mGrabbedSoftBodyIndex].particles[mGrabbedParticleIndex];
+                grabbedParticle.force = glm::vec2(0.0f, 0.0f);
+                grabbedParticle.velocity = glm::vec2(0.0f, 0.0f);
+                grabbedParticle.position = glm::vec2(worldMousePosition.x, worldMousePosition.y);
+            }
             FixedUpdate(fixedDeltaTime);
             accumulator -= fixedDeltaTime;
         }

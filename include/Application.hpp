@@ -21,4 +21,6 @@ private:
     sf::ContextSettings mSettings{24u, 8u, 8u, 3u, 3u};
     glm::vec2 mGravitationalAcceleration{0.0f, 9.8f};
     std::vector<SoftBody> mSoftBodies;
+    int mGrabbedParticleIndex = -1;
+    int mGrabbedSoftBodyIndex = -1;
 };

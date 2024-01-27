@@ -63,13 +63,45 @@ void Application::Run() {
                 case sf::Event::Closed:
                     window.close();
                     break;
+
                 case sf::Event::Resized:
                     view.setSize(static_cast<float>(event.size.width), static_cast<float>(event.size.height));
                     window.setView(view);
                     break;
+
+                case sf::Event::MouseButtonPressed:
+                    if (event.mouseButton.button == sf::Mouse::Left) {
+                        for (size_t softBodyIndex = 0; softBodyIndex < mSoftBodies.size(); ++softBodyIndex) {
+                            const SoftBody &softBody = mSoftBodies[softBodyIndex];
+                            for (size_t particleIndex = 0; particleIndex < softBody.particles.size(); ++particleIndex) {
+                                const Particle &particle = softBody.particles[particleIndex];
+                                const sf::Vector2f worldMousePosition = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+                                const float distance = glm::length(glm::vec2(worldMousePosition.x - particle.position.x, worldMousePosition.y - particle.position.y));
+                                if (distance <= particle.radius) {
+                                    mGrabbedSoftBodyIndex = static_cast<int>(softBodyIndex);
+                                    mGrabbedParticleIndex = static_cast<int>(particleIndex);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    break;
+
+                case sf::Event::MouseButtonReleased:
+                    if (event.mouseButton.button == sf::Mouse::Left) {
+                        mGrabbedSoftBodyIndex = -1;
+                        mGrabbedParticleIndex = -1;
+                    }
+                    break;
+
                 default:
                     break;
             }
+        }
+
+        if (mGrabbedSoftBodyIndex != -1 && mGrabbedParticleIndex != -1) {
+            const sf::Vector2f worldMousePosition = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+            mSoftBodies[mGrabbedSoftBodyIndex].particles[mGrabbedParticleIndex].position = glm::vec2(worldMousePosition.x, worldMousePosition.y);
         }
 
         const sf::Time deltaTime = deltaClock.restart();
@@ -101,7 +133,11 @@ void Application::Run() {
                 shape.setRadius(particle.radius);
                 shape.setOrigin(particle.radius, particle.radius);
                 shape.setPosition(particle.position.x, particle.position.y);
-                shape.setFillColor(sf::Color(230, 232, 230));
+                if (mGrabbedParticleIndex != -1 && &particle == &mSoftBodies[mGrabbedSoftBodyIndex].particles[mGrabbedParticleIndex]) {
+                    shape.setFillColor(sf::Color(255, 0, 0));
+                } else {
+                    shape.setFillColor(sf::Color(230, 232, 230));
+                }
                 window.draw(shape);
             }
         }

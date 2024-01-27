@@ -15,7 +15,12 @@
 #include <glm/gtc/type_ptr.hpp>
 
 Application::Application() {
-    mSoftBodies.emplace_back(Cloth({25.0f, 25.0f}, 23u, 23u, 25.0f));
+    float padding = 20.0f;
+    unsigned int rows = 10u;
+    unsigned int cols = 10u;
+    glm::vec2 center = glm::vec2(mMode.width, mMode.height) * 0.5f;
+    glm::vec2 position = center - glm::vec2(cols, rows) * padding * 0.5f;
+    mSoftBodies.emplace_back(Cloth(position, rows, cols, padding));
 }
 
 void Application::FixedUpdate(const sf::Time &fixedDeltaTime) {

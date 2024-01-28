@@ -22,7 +22,7 @@ private:
     sf::Uint32 mStyle{sf::Style::Default};
     sf::ContextSettings mSettings{24u, 8u, 8u, 3u, 3u};
     sf::RenderWindow mWindow{mMode, mTitle, mStyle, mSettings};
-    sf::View view{mWindow.getDefaultView()};
+    sf::View mView{mWindow.getDefaultView()};
     glm::vec2 mGravitationalAcceleration{0.0f, 9.8f};
     std::vector<SoftBody> mSoftBodies;
     bool mGrabbedSoftBody{false};

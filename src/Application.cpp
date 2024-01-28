@@ -66,18 +66,18 @@ void Application::Run() {
                     break;
 
                 case sf::Event::Resized:
-                    view.setSize(static_cast<float>(event.size.width), static_cast<float>(event.size.height));
-                    mWindow.setView(view);
+                    mView.setSize(static_cast<float>(event.size.width), static_cast<float>(event.size.height));
+                    mWindow.setView(mView);
                     break;
 
                 case sf::Event::MouseWheelScrolled:
                     if (event.mouseWheelScroll.delta > 0) {
-                        view.zoom(1/1.2f);
+                        mView.zoom(1/1.2f);
                     }
                     if (event.mouseWheelScroll.delta < 0) {
-                        view.zoom(1.2f);
+                        mView.zoom(1.2f);
                     }
-                    mWindow.setView(view);
+                    mWindow.setView(mView);
                     break;
 
                 case sf::Event::MouseButtonPressed:

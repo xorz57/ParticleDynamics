@@ -15,9 +15,9 @@
 #include <glm/gtc/type_ptr.hpp>
 
 Application::Application() {
-    float padding = 20.0f;
     unsigned int rows = 10u;
     unsigned int cols = 10u;
+    float padding = 20.0f;
     glm::vec2 center = glm::vec2(mMode.width, mMode.height) * 0.5f;
     glm::vec2 position = center - glm::vec2(cols, rows) * padding * 0.5f;
     mSoftBodies.emplace_back(Cloth(position, rows, cols, padding));
@@ -109,15 +109,16 @@ void Application::Run() {
 
         accumulator += scaledDeltaTime;
         while (accumulator > fixedDeltaTime) {
-            if (mGrabbedSoftBodyIndex != -1 && mGrabbedParticleIndex != -1) {
-                const sf::Vector2f worldMousePosition = window.mapPixelToCoords(sf::Mouse::getPosition(window));
-                Particle &grabbedParticle = mSoftBodies[mGrabbedSoftBodyIndex].particles[mGrabbedParticleIndex];
-                grabbedParticle.force = glm::vec2(0.0f, 0.0f);
-                grabbedParticle.velocity = glm::vec2(0.0f, 0.0f);
-                grabbedParticle.position = glm::vec2(worldMousePosition.x, worldMousePosition.y);
-            }
             FixedUpdate(fixedDeltaTime);
             accumulator -= fixedDeltaTime;
+        }
+
+        if (mGrabbedSoftBodyIndex != -1 && mGrabbedParticleIndex != -1) {
+            const sf::Vector2f worldMousePosition = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+            Particle &grabbedParticle = mSoftBodies[mGrabbedSoftBodyIndex].particles[mGrabbedParticleIndex];
+            grabbedParticle.force = glm::vec2(0.0f, 0.0f);
+            grabbedParticle.velocity = glm::vec2(0.0f, 0.0f);
+            grabbedParticle.position = glm::vec2(worldMousePosition.x, worldMousePosition.y);
         }
 
         ImGui::SFML::Update(window, deltaTime);
@@ -140,7 +141,7 @@ void Application::Run() {
                 shape.setRadius(particle.radius);
                 shape.setOrigin(particle.radius, particle.radius);
                 shape.setPosition(particle.position.x, particle.position.y);
-                if (mGrabbedParticleIndex != -1 && &particle == &mSoftBodies[mGrabbedSoftBodyIndex].particles[mGrabbedParticleIndex]) {
+                if (mGrabbedSoftBodyIndex != -1 && mGrabbedParticleIndex != -1 && &particle == &mSoftBodies[mGrabbedSoftBodyIndex].particles[mGrabbedParticleIndex]) {
                     shape.setFillColor(sf::Color(255, 0, 0));
                 } else {
                     shape.setFillColor(sf::Color(230, 232, 230));
@@ -150,8 +151,8 @@ void Application::Run() {
         }
 
         ImGui::Begin("Settings");
-        ImGui::DragFloat2("Gravity", glm::value_ptr(mGravitationalAcceleration), 0.1f, -9.8f, 9.8f);
         ImGui::DragFloat("Time Scale", &timeScale, 0.1f, 0.0f, 10.0f);
+        ImGui::DragFloat2("Gravity", glm::value_ptr(mGravitationalAcceleration), 0.1f, -9.8f, 9.8f);
         ImGui::End();
 
         ImGui::Begin("Statistics");

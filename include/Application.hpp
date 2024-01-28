@@ -15,7 +15,7 @@ public:
     void Run();
 
 private:
-    sf::VideoMode mMode{600u, 600u};
+    sf::VideoMode mMode{800u, 600u};
     sf::String mTitle{"ParticlePhysics"};
     sf::Uint32 mStyle{sf::Style::Default};
     sf::ContextSettings mSettings{24u, 8u, 8u, 3u, 3u};

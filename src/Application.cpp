@@ -16,11 +16,10 @@
 Application::Application() {
     mWindow.setFramerateLimit(120u);
 
-    unsigned int rows = 10u;
-    unsigned int cols = 10u;
-    float padding = 20.0f;
-    glm::vec2 center = glm::vec2(mMode.width, mMode.height) * 0.5f;
-    glm::vec2 position = center - glm::vec2(cols - 1, rows - 1) * padding * 0.5f;
+    const unsigned int rows = 16u;
+    const unsigned int cols = 16u;
+    const float padding = 16.0f;
+    const glm::vec2 position = 0.5f * glm::vec2(mMode.width, mMode.height) - 0.5f * padding * glm::vec2(cols - 1, rows - 1);
     mSoftBodies.emplace_back(Cloth(position, rows, cols, padding));
 }
 
@@ -31,7 +30,9 @@ void Application::FixedUpdate(const sf::Time &fixedDeltaTime) {
             const glm::vec2 dPosition = spring.mParticle2.position - spring.mParticle1.position;
             const glm::vec2 dVelocity = spring.mParticle2.velocity - spring.mParticle1.velocity;
             if (glm::length(dPosition) != 0) {
-                const glm::vec2 force = spring.mSpringConstant * (glm::length(dPosition) - spring.mRestLength) * glm::normalize(dPosition) + spring.mDampingConstant * dVelocity;
+                const glm::vec2 springForce = spring.mSpringConstant * (glm::length(dPosition) - spring.mRestLength) * glm::normalize(dPosition);
+                const glm::vec2 dampingForce = spring.mDampingConstant * dVelocity;
+                const glm::vec2 force = springForce + dampingForce;
                 spring.mParticle1.force += force;
                 spring.mParticle2.force -= force;
             }
@@ -72,7 +73,7 @@ void Application::Run() {
 
                 case sf::Event::MouseWheelScrolled:
                     if (event.mouseWheelScroll.delta > 0) {
-                        mView.zoom(1/1.2f);
+                        mView.zoom(1 / 1.2f);
                     }
                     if (event.mouseWheelScroll.delta < 0) {
                         mView.zoom(1.2f);
@@ -89,8 +90,8 @@ void Application::Run() {
                                 const sf::Vector2f worldMousePosition = mWindow.mapPixelToCoords(sf::Mouse::getPosition(mWindow));
                                 const float distance = glm::length(glm::vec2(worldMousePosition.x - particle.position.x, worldMousePosition.y - particle.position.y));
                                 if (distance <= particle.radius) {
-                                    mSelectedSoftBody = true;
-                                    mSelectedParticle = true;
+                                    mIsSoftBodySelected = true;
+                                    mIsParticleSelected = true;
                                     mSelectedSoftBodyIndex = softBodyIndex;
                                     mSelectedParticleIndex = particleIndex;
                                     break;
@@ -102,8 +103,8 @@ void Application::Run() {
 
                 case sf::Event::MouseButtonReleased:
                     if (event.mouseButton.button == sf::Mouse::Left) {
-                        mSelectedSoftBody = false;
-                        mSelectedParticle = false;
+                        mIsSoftBodySelected = false;
+                        mIsParticleSelected = false;
                     }
                     break;
 
@@ -121,7 +122,7 @@ void Application::Run() {
             accumulator -= fixedDeltaTime;
         }
 
-        if (mSelectedSoftBody && mSelectedParticle) {
+        if (mIsSoftBodySelected && mIsParticleSelected) {
             const sf::Vector2f worldMousePosition = mWindow.mapPixelToCoords(sf::Mouse::getPosition(mWindow));
             Particle &SelectedParticle = mSoftBodies[mSelectedSoftBodyIndex].particles[mSelectedParticleIndex];
             SelectedParticle.force = glm::vec2(0.0f, 0.0f);
@@ -149,7 +150,7 @@ void Application::Run() {
                 shape.setRadius(particle.radius);
                 shape.setOrigin(particle.radius, particle.radius);
                 shape.setPosition(particle.position.x, particle.position.y);
-                if (mSelectedSoftBody && mSelectedParticle && &particle == &mSoftBodies[mSelectedSoftBodyIndex].particles[mSelectedParticleIndex]) {
+                if (mIsSoftBodySelected && mIsParticleSelected && &particle == &mSoftBodies[mSelectedSoftBodyIndex].particles[mSelectedParticleIndex]) {
                     shape.setFillColor(sf::Color(200, 0, 0));
                 } else {
                     shape.setFillColor(sf::Color(200, 200, 200));

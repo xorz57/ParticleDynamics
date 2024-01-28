@@ -25,8 +25,8 @@ private:
     sf::View mView{mWindow.getDefaultView()};
     glm::vec2 mGravitationalAcceleration{0.0f, 9.8f};
     std::vector<SoftBody> mSoftBodies;
-    bool mGrabbedSoftBody{false};
-    bool mGrabbedParticle{false};
-    size_t mGrabbedSoftBodyIndex{0};
-    size_t mGrabbedParticleIndex{0};
+    bool mSelectedSoftBody{false};
+    bool mSelectedParticle{false};
+    size_t mSelectedSoftBodyIndex{0};
+    size_t mSelectedParticleIndex{0};
 };

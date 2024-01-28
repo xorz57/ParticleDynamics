@@ -89,10 +89,10 @@ void Application::Run() {
                                 const sf::Vector2f worldMousePosition = mWindow.mapPixelToCoords(sf::Mouse::getPosition(mWindow));
                                 const float distance = glm::length(glm::vec2(worldMousePosition.x - particle.position.x, worldMousePosition.y - particle.position.y));
                                 if (distance <= particle.radius) {
-                                    mGrabbedSoftBody = true;
-                                    mGrabbedParticle = true;
-                                    mGrabbedSoftBodyIndex = softBodyIndex;
-                                    mGrabbedParticleIndex = particleIndex;
+                                    mSelectedSoftBody = true;
+                                    mSelectedParticle = true;
+                                    mSelectedSoftBodyIndex = softBodyIndex;
+                                    mSelectedParticleIndex = particleIndex;
                                     break;
                                 }
                             }
@@ -102,8 +102,8 @@ void Application::Run() {
 
                 case sf::Event::MouseButtonReleased:
                     if (event.mouseButton.button == sf::Mouse::Left) {
-                        mGrabbedSoftBody = false;
-                        mGrabbedParticle = false;
+                        mSelectedSoftBody = false;
+                        mSelectedParticle = false;
                     }
                     break;
 
@@ -121,12 +121,12 @@ void Application::Run() {
             accumulator -= fixedDeltaTime;
         }
 
-        if (mGrabbedSoftBody && mGrabbedParticle) {
+        if (mSelectedSoftBody && mSelectedParticle) {
             const sf::Vector2f worldMousePosition = mWindow.mapPixelToCoords(sf::Mouse::getPosition(mWindow));
-            Particle &grabbedParticle = mSoftBodies[mGrabbedSoftBodyIndex].particles[mGrabbedParticleIndex];
-            grabbedParticle.force = glm::vec2(0.0f, 0.0f);
-            grabbedParticle.velocity = glm::vec2(0.0f, 0.0f);
-            grabbedParticle.position = glm::vec2(worldMousePosition.x, worldMousePosition.y);
+            Particle &SelectedParticle = mSoftBodies[mSelectedSoftBodyIndex].particles[mSelectedParticleIndex];
+            SelectedParticle.force = glm::vec2(0.0f, 0.0f);
+            SelectedParticle.velocity = glm::vec2(0.0f, 0.0f);
+            SelectedParticle.position = glm::vec2(worldMousePosition.x, worldMousePosition.y);
         }
 
         ImGui::SFML::Update(mWindow, deltaTime);
@@ -149,7 +149,7 @@ void Application::Run() {
                 shape.setRadius(particle.radius);
                 shape.setOrigin(particle.radius, particle.radius);
                 shape.setPosition(particle.position.x, particle.position.y);
-                if (mGrabbedSoftBody && mGrabbedParticle && &particle == &mSoftBodies[mGrabbedSoftBodyIndex].particles[mGrabbedParticleIndex]) {
+                if (mSelectedSoftBody && mSelectedParticle && &particle == &mSoftBodies[mSelectedSoftBodyIndex].particles[mSelectedParticleIndex]) {
                     shape.setFillColor(sf::Color(200, 0, 0));
                 } else {
                     shape.setFillColor(sf::Color(200, 200, 200));

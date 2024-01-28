@@ -15,11 +15,11 @@
 #include <glm/gtc/type_ptr.hpp>
 
 Application::Application() {
-    unsigned int rows = 10u;
-    unsigned int cols = 10u;
+    unsigned int rows = 20u;
+    unsigned int cols = 20u;
     float padding = 20.0f;
     glm::vec2 center = glm::vec2(mMode.width, mMode.height) * 0.5f;
-    glm::vec2 position = center - glm::vec2(cols, rows) * padding * 0.5f;
+    glm::vec2 position = center - glm::vec2(cols - 1, rows - 1) * padding * 0.5f;
     mSoftBodies.emplace_back(Cloth(position, rows, cols, padding));
 }
 

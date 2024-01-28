@@ -132,8 +132,8 @@ void Application::Run() {
                 line[0].position.y = spring.mParticle1.position.y;
                 line[1].position.x = spring.mParticle2.position.x;
                 line[1].position.y = spring.mParticle2.position.y;
-                line[0].color = sf::Color(206, 208, 206);
-                line[1].color = sf::Color(206, 208, 206);
+                line[0].color = sf::Color(150, 150, 150);
+                line[1].color = sf::Color(150, 150, 150);
                 window.draw(line);
             }
             for (const Particle &particle: softBody.particles) {
@@ -142,9 +142,9 @@ void Application::Run() {
                 shape.setOrigin(particle.radius, particle.radius);
                 shape.setPosition(particle.position.x, particle.position.y);
                 if (mGrabbedSoftBodyIndex != -1 && mGrabbedParticleIndex != -1 && &particle == &mSoftBodies[mGrabbedSoftBodyIndex].particles[mGrabbedParticleIndex]) {
-                    shape.setFillColor(sf::Color(255, 0, 0));
+                    shape.setFillColor(sf::Color(200, 0, 0));
                 } else {
-                    shape.setFillColor(sf::Color(230, 232, 230));
+                    shape.setFillColor(sf::Color(200, 200, 200));
                 }
                 window.draw(shape);
             }

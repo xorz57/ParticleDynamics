@@ -4,7 +4,6 @@
 #include "Spring.hpp"
 
 #include <SFML/Graphics/CircleShape.hpp>
-#include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/VertexArray.hpp>
 #include <SFML/Window/Event.hpp>
 
@@ -15,6 +14,8 @@
 #include <glm/gtc/type_ptr.hpp>
 
 Application::Application() {
+    mWindow.setFramerateLimit(120u);
+
     unsigned int rows = 10u;
     unsigned int cols = 10u;
     float padding = 20.0f;
@@ -49,29 +50,24 @@ void Application::FixedUpdate(const sf::Time &fixedDeltaTime) {
 }
 
 void Application::Run() {
-    sf::RenderWindow window(mMode, mTitle, mStyle, mSettings);
-    window.setFramerateLimit(120u);
-
-    sf::View view = window.getDefaultView();
-
-    (void) ImGui::SFML::Init(window);
+    (void) ImGui::SFML::Init(mWindow);
 
     const sf::Time fixedDeltaTime = sf::seconds(1.0f / 64.0f);
     float timeScale = 5.0f;
     sf::Time accumulator = sf::Time::Zero;
     sf::Clock deltaClock;
-    while (window.isOpen()) {
+    while (mWindow.isOpen()) {
         sf::Event event{};
-        while (window.pollEvent(event)) {
-            ImGui::SFML::ProcessEvent(window, event);
+        while (mWindow.pollEvent(event)) {
+            ImGui::SFML::ProcessEvent(mWindow, event);
             switch (event.type) {
                 case sf::Event::Closed:
-                    window.close();
+                    mWindow.close();
                     break;
 
                 case sf::Event::Resized:
                     view.setSize(static_cast<float>(event.size.width), static_cast<float>(event.size.height));
-                    window.setView(view);
+                    mWindow.setView(view);
                     break;
 
                 case sf::Event::MouseWheelScrolled:
@@ -81,7 +77,7 @@ void Application::Run() {
                     if (event.mouseWheelScroll.delta < 0) {
                         view.zoom(1.2f);
                     }
-                    window.setView(view);
+                    mWindow.setView(view);
                     break;
 
                 case sf::Event::MouseButtonPressed:
@@ -90,9 +86,11 @@ void Application::Run() {
                             const SoftBody &softBody = mSoftBodies[softBodyIndex];
                             for (size_t particleIndex = 0; particleIndex < softBody.particles.size(); ++particleIndex) {
                                 const Particle &particle = softBody.particles[particleIndex];
-                                const sf::Vector2f worldMousePosition = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+                                const sf::Vector2f worldMousePosition = mWindow.mapPixelToCoords(sf::Mouse::getPosition(mWindow));
                                 const float distance = glm::length(glm::vec2(worldMousePosition.x - particle.position.x, worldMousePosition.y - particle.position.y));
                                 if (distance <= particle.radius) {
+                                    mGrabbedSoftBody = true;
+                                    mGrabbedParticle = true;
                                     mGrabbedSoftBodyIndex = softBodyIndex;
                                     mGrabbedParticleIndex = particleIndex;
                                     break;
@@ -104,8 +102,8 @@ void Application::Run() {
 
                 case sf::Event::MouseButtonReleased:
                     if (event.mouseButton.button == sf::Mouse::Left) {
-                        mGrabbedSoftBodyIndex = -1;
-                        mGrabbedParticleIndex = -1;
+                        mGrabbedSoftBody = false;
+                        mGrabbedParticle = false;
                     }
                     break;
 
@@ -123,17 +121,17 @@ void Application::Run() {
             accumulator -= fixedDeltaTime;
         }
 
-        if (mGrabbedSoftBodyIndex != -1 && mGrabbedParticleIndex != -1) {
-            const sf::Vector2f worldMousePosition = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+        if (mGrabbedSoftBody && mGrabbedParticle) {
+            const sf::Vector2f worldMousePosition = mWindow.mapPixelToCoords(sf::Mouse::getPosition(mWindow));
             Particle &grabbedParticle = mSoftBodies[mGrabbedSoftBodyIndex].particles[mGrabbedParticleIndex];
             grabbedParticle.force = glm::vec2(0.0f, 0.0f);
             grabbedParticle.velocity = glm::vec2(0.0f, 0.0f);
             grabbedParticle.position = glm::vec2(worldMousePosition.x, worldMousePosition.y);
         }
 
-        ImGui::SFML::Update(window, deltaTime);
+        ImGui::SFML::Update(mWindow, deltaTime);
 
-        window.clear(sf::Color(25, 25, 25));
+        mWindow.clear(sf::Color(25, 25, 25));
 
         for (const SoftBody &softBody: mSoftBodies) {
             for (const Spring &spring: softBody.springs) {
@@ -144,19 +142,19 @@ void Application::Run() {
                 line[1].position.y = spring.mParticle2.position.y;
                 line[0].color = sf::Color(150, 150, 150);
                 line[1].color = sf::Color(150, 150, 150);
-                window.draw(line);
+                mWindow.draw(line);
             }
             for (const Particle &particle: softBody.particles) {
                 sf::CircleShape shape;
                 shape.setRadius(particle.radius);
                 shape.setOrigin(particle.radius, particle.radius);
                 shape.setPosition(particle.position.x, particle.position.y);
-                if (mGrabbedSoftBodyIndex != -1 && mGrabbedParticleIndex != -1 && &particle == &mSoftBodies[mGrabbedSoftBodyIndex].particles[mGrabbedParticleIndex]) {
+                if (mGrabbedSoftBody && mGrabbedParticle && &particle == &mSoftBodies[mGrabbedSoftBodyIndex].particles[mGrabbedParticleIndex]) {
                     shape.setFillColor(sf::Color(200, 0, 0));
                 } else {
                     shape.setFillColor(sf::Color(200, 200, 200));
                 }
-                window.draw(shape);
+                mWindow.draw(shape);
             }
         }
 
@@ -173,9 +171,9 @@ void Application::Run() {
         ImGui::Text("Scaled Delta Time : %3d ms", scaledDeltaTime.asMilliseconds());
         ImGui::End();
 
-        ImGui::SFML::Render(window);
+        ImGui::SFML::Render(mWindow);
 
-        window.display();
+        mWindow.display();
     }
 
     ImGui::SFML::Shutdown();

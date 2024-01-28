@@ -83,8 +83,8 @@ void Application::Run() {
                                 const sf::Vector2f worldMousePosition = window.mapPixelToCoords(sf::Mouse::getPosition(window));
                                 const float distance = glm::length(glm::vec2(worldMousePosition.x - particle.position.x, worldMousePosition.y - particle.position.y));
                                 if (distance <= particle.radius) {
-                                    mGrabbedSoftBodyIndex = static_cast<int>(softBodyIndex);
-                                    mGrabbedParticleIndex = static_cast<int>(particleIndex);
+                                    mGrabbedSoftBodyIndex = softBodyIndex;
+                                    mGrabbedParticleIndex = particleIndex;
                                     break;
                                 }
                             }

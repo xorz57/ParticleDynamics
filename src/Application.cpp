@@ -74,6 +74,16 @@ void Application::Run() {
                     window.setView(view);
                     break;
 
+                case sf::Event::MouseWheelScrolled:
+                    if (event.mouseWheelScroll.delta > 0) {
+                        view.zoom(1/1.2f);
+                    }
+                    if (event.mouseWheelScroll.delta < 0) {
+                        view.zoom(1.2f);
+                    }
+                    window.setView(view);
+                    break;
+
                 case sf::Event::MouseButtonPressed:
                     if (event.mouseButton.button == sf::Mouse::Left) {
                         for (size_t softBodyIndex = 0; softBodyIndex < mSoftBodies.size(); ++softBodyIndex) {

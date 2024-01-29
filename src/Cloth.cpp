@@ -18,12 +18,12 @@ Cloth::Cloth(const glm::vec2 &position, unsigned int rows, unsigned int cols, fl
             if (col < cols - 1) {
                 Particle &particle1 = particles[row * cols + col];
                 Particle &particle2 = particles[row * cols + col + 1];
-                springs.emplace_back(particle1, particle2, distance(particle1, particle2), 32.0f, 1.0f);
+                springs.emplace_back(particle1, particle2, distance(particle1, particle2), 128.0f, 1.0f);
             }
             if (row < rows - 1) {
                 Particle &particle1 = particles[row * cols + col];
                 Particle &particle2 = particles[(row + 1) * cols + col];
-                springs.emplace_back(particle1, particle2, distance(particle1, particle2), 32.0f, 1.0f);
+                springs.emplace_back(particle1, particle2, distance(particle1, particle2), 128.0f, 1.0f);
             }
         }
     }

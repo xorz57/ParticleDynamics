@@ -142,10 +142,10 @@ void Application::HandleEventResized(const sf::Event &event) {
 }
 
 void Application::HandleEventMouseWheelScrolled(const sf::Event &event) {
-    if (event.mouseWheelScroll.delta > 0) {
-        mView.zoom(1 / 1.2f);
+    if (event.mouseWheelScroll.delta > 0.0f) {
+        mView.zoom(1.0f / 1.2f);
     }
-    if (event.mouseWheelScroll.delta < 0) {
+    if (event.mouseWheelScroll.delta < 0.0f) {
         mView.zoom(1.2f);
     }
     mWindow.setView(mView);

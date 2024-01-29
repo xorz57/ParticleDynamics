@@ -23,33 +23,6 @@ Application::Application() {
     mSoftBodies.emplace_back(Cloth(position, rows, cols, padding));
 }
 
-void Application::FixedUpdate(const sf::Time &fixedDeltaTime) {
-    const float dt = fixedDeltaTime.asSeconds();
-    for (SoftBody &softBody: mSoftBodies) {
-        for (Spring &spring: softBody.springs) {
-            const glm::vec2 dPosition = spring.mParticle2.position - spring.mParticle1.position;
-            const glm::vec2 dVelocity = spring.mParticle2.velocity - spring.mParticle1.velocity;
-            if (glm::length(dPosition) != 0) {
-                const glm::vec2 springForce = spring.mSpringConstant * (glm::length(dPosition) - spring.mRestLength) * glm::normalize(dPosition);
-                const glm::vec2 dampingForce = spring.mDampingConstant * dVelocity;
-                const glm::vec2 force = springForce + dampingForce;
-                spring.mParticle1.force += force;
-                spring.mParticle2.force -= force;
-            }
-        }
-        for (Particle &particle: softBody.particles) {
-            const glm::vec2 gravitationalForce = particle.mass * mGravitationalAcceleration;
-            particle.force += gravitationalForce;
-            if (!particle.pinned) {
-                const glm::vec2 acceleration = particle.force * (1.0f / particle.mass);
-                particle.velocity += acceleration * dt;
-                particle.position += particle.velocity * dt;
-            }
-            particle.force = glm::vec2(0.0f, 0.0f);
-        }
-    }
-}
-
 void Application::Run() {
     (void) ImGui::SFML::Init(mWindow);
 
@@ -58,34 +31,7 @@ void Application::Run() {
     sf::Time accumulator = sf::Time::Zero;
     sf::Clock deltaClock;
     while (mWindow.isOpen()) {
-        sf::Event event{};
-        while (mWindow.pollEvent(event)) {
-            ImGui::SFML::ProcessEvent(mWindow, event);
-            switch (event.type) {
-                case sf::Event::Closed:
-                    HandleEventClosed(event);
-                    break;
-
-                case sf::Event::Resized:
-                    HandleEventResized(event);
-                    break;
-
-                case sf::Event::MouseWheelScrolled:
-                    HandleEventMouseWheelScrolled(event);
-                    break;
-
-                case sf::Event::MouseButtonPressed:
-                    HandleEventMouseButtonPressed(event);
-                    break;
-
-                case sf::Event::MouseButtonReleased:
-                    HandleEventMouseButtonReleased(event);
-                    break;
-
-                default:
-                    break;
-            }
-        }
+        ProcessEvents();
 
         const sf::Time deltaTime = deltaClock.restart();
         const sf::Time scaledDeltaTime = timeScale * deltaTime;
@@ -154,6 +100,37 @@ void Application::Run() {
     ImGui::SFML::Shutdown();
 }
 
+void Application::ProcessEvents() {
+    sf::Event event{};
+    while (mWindow.pollEvent(event)) {
+        ImGui::SFML::ProcessEvent(mWindow, event);
+        switch (event.type) {
+            case sf::Event::Closed:
+                HandleEventClosed(event);
+                break;
+
+            case sf::Event::Resized:
+                HandleEventResized(event);
+                break;
+
+            case sf::Event::MouseWheelScrolled:
+                HandleEventMouseWheelScrolled(event);
+                break;
+
+            case sf::Event::MouseButtonPressed:
+                HandleEventMouseButtonPressed(event);
+                break;
+
+            case sf::Event::MouseButtonReleased:
+                HandleEventMouseButtonReleased(event);
+                break;
+
+            default:
+                break;
+        }
+    }
+}
+
 void Application::HandleEventClosed(const sf::Event &event) {
     mWindow.close();
 }
@@ -197,5 +174,32 @@ void Application::HandleEventMouseButtonReleased(const sf::Event &event) {
     if (event.mouseButton.button == sf::Mouse::Left) {
         mIsSoftBodySelected = false;
         mIsParticleSelected = false;
+    }
+}
+
+void Application::FixedUpdate(const sf::Time &fixedDeltaTime) {
+    const float dt = fixedDeltaTime.asSeconds();
+    for (SoftBody &softBody: mSoftBodies) {
+        for (Spring &spring: softBody.springs) {
+            const glm::vec2 dPosition = spring.mParticle2.position - spring.mParticle1.position;
+            const glm::vec2 dVelocity = spring.mParticle2.velocity - spring.mParticle1.velocity;
+            if (glm::length(dPosition) != 0) {
+                const glm::vec2 springForce = spring.mSpringConstant * (glm::length(dPosition) - spring.mRestLength) * glm::normalize(dPosition);
+                const glm::vec2 dampingForce = spring.mDampingConstant * dVelocity;
+                const glm::vec2 force = springForce + dampingForce;
+                spring.mParticle1.force += force;
+                spring.mParticle2.force -= force;
+            }
+        }
+        for (Particle &particle: softBody.particles) {
+            const glm::vec2 gravitationalForce = particle.mass * mGravitationalAcceleration;
+            particle.force += gravitationalForce;
+            if (!particle.pinned) {
+                const glm::vec2 acceleration = particle.force * (1.0f / particle.mass);
+                particle.velocity += acceleration * dt;
+                particle.position += particle.velocity * dt;
+            }
+            particle.force = glm::vec2(0.0f, 0.0f);
+        }
     }
 }

@@ -13,15 +13,16 @@
 class Application {
 public:
     Application();
-    void FixedUpdate(const sf::Time &fixedDeltaTime);
     void Run();
 
 private:
+    void ProcessEvents();
     void HandleEventClosed(const sf::Event &event);
     void HandleEventResized(const sf::Event &event);
     void HandleEventMouseWheelScrolled(const sf::Event &event);
     void HandleEventMouseButtonPressed(const sf::Event &event);
     void HandleEventMouseButtonReleased(const sf::Event &event);
+    void FixedUpdate(const sf::Time &fixedDeltaTime);
 
     sf::VideoMode mMode{800u, 600u};
     sf::String mTitle{"ParticlePhysics"};

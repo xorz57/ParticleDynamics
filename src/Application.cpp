@@ -44,10 +44,10 @@ void Application::Run() {
 
         if (mIsSoftBodySelected && mIsParticleSelected) {
             const sf::Vector2f worldMousePosition = mWindow.mapPixelToCoords(sf::Mouse::getPosition(mWindow));
-            Particle &SelectedParticle = mSoftBodies[mSelectedSoftBodyIndex].particles[mSelectedParticleIndex];
-            SelectedParticle.force = glm::vec2(0.0f, 0.0f);
-            SelectedParticle.velocity = glm::vec2(0.0f, 0.0f);
-            SelectedParticle.position = glm::vec2(worldMousePosition.x, worldMousePosition.y);
+            Particle &selectedParticle = mSoftBodies[mSelectedSoftBodyIndex].particles[mSelectedParticleIndex];
+            selectedParticle.force = glm::vec2(0.0f, 0.0f);
+            selectedParticle.velocity = glm::vec2(0.0f, 0.0f);
+            selectedParticle.position = glm::vec2(worldMousePosition.x, worldMousePosition.y);
         }
 
         ImGui::SFML::Update(mWindow, deltaTime);
@@ -70,7 +70,8 @@ void Application::Run() {
                 shape.setRadius(particle.radius);
                 shape.setOrigin(particle.radius, particle.radius);
                 shape.setPosition(particle.position.x, particle.position.y);
-                if (mIsSoftBodySelected && mIsParticleSelected && &particle == &mSoftBodies[mSelectedSoftBodyIndex].particles[mSelectedParticleIndex]) {
+                Particle &selectedParticle = mSoftBodies[mSelectedSoftBodyIndex].particles[mSelectedParticleIndex];
+                if (mIsSoftBodySelected && mIsParticleSelected && &particle == &selectedParticle) {
                     shape.setFillColor(sf::Color(200, 0, 0));
                 } else {
                     shape.setFillColor(sf::Color(200, 200, 200));

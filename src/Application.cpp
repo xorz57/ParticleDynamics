@@ -14,7 +14,9 @@
 #include <glm/gtc/type_ptr.hpp>
 
 Application::Application() {
+    mWindow.create(mMode, mTitle, mStyle, mSettings);
     mWindow.setFramerateLimit(120u);
+    mView = mWindow.getDefaultView();
 
     const unsigned int rows = 16u;
     const unsigned int cols = 16u;
@@ -43,11 +45,12 @@ void Application::Run() {
         }
 
         if (mIsSoftBodySelected && mIsParticleSelected) {
-            const sf::Vector2f worldMousePosition = mWindow.mapPixelToCoords(sf::Mouse::getPosition(mWindow));
+            const sf::Vector2i pixelPosition = sf::Mouse::getPosition(mWindow);
+            const sf::Vector2f worldPosition = mWindow.mapPixelToCoords(pixelPosition);
             Particle &selectedParticle = mSoftBodies[mSelectedSoftBodyIndex].particles[mSelectedParticleIndex];
             selectedParticle.force = glm::vec2(0.0f, 0.0f);
             selectedParticle.velocity = glm::vec2(0.0f, 0.0f);
-            selectedParticle.position = glm::vec2(worldMousePosition.x, worldMousePosition.y);
+            selectedParticle.position = glm::vec2(worldPosition.x, worldPosition.y);
         }
 
         ImGui::SFML::Update(mWindow, deltaTime);
@@ -143,10 +146,10 @@ void Application::HandleEventResized(const sf::Event &event) {
 
 void Application::HandleEventMouseWheelScrolled(const sf::Event &event) {
     if (event.mouseWheelScroll.delta > 0.0f) {
-        mView.zoom(1.0f / 1.2f);
+        mView.zoom(1.0f / 1.05f);
     }
     if (event.mouseWheelScroll.delta < 0.0f) {
-        mView.zoom(1.2f);
+        mView.zoom(1.05f);
     }
     mWindow.setView(mView);
 }
@@ -157,8 +160,9 @@ void Application::HandleEventMouseButtonPressed(const sf::Event &event) {
             const SoftBody &softBody = mSoftBodies[softBodyIndex];
             for (size_t particleIndex = 0; particleIndex < softBody.particles.size(); ++particleIndex) {
                 const Particle &particle = softBody.particles[particleIndex];
-                const sf::Vector2f worldMousePosition = mWindow.mapPixelToCoords(sf::Mouse::getPosition(mWindow));
-                const float distance = glm::length(glm::vec2(worldMousePosition.x - particle.position.x, worldMousePosition.y - particle.position.y));
+                const sf::Vector2i pixelPosition = sf::Mouse::getPosition(mWindow);
+                const sf::Vector2f worldPosition = mWindow.mapPixelToCoords(pixelPosition);
+                const float distance = glm::length(glm::vec2(worldPosition.x - particle.position.x, worldPosition.y - particle.position.y));
                 if (distance <= particle.radius) {
                     mIsSoftBodySelected = true;
                     mIsParticleSelected = true;

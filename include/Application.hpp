@@ -17,6 +17,12 @@ public:
     void Run();
 
 private:
+    void HandleEventClosed(const sf::Event &event);
+    void HandleEventResized(const sf::Event &event);
+    void HandleEventMouseWheelScrolled(const sf::Event &event);
+    void HandleEventMouseButtonPressed(const sf::Event &event);
+    void HandleEventMouseButtonReleased(const sf::Event &event);
+
     sf::VideoMode mMode{800u, 600u};
     sf::String mTitle{"ParticlePhysics"};
     sf::Uint32 mStyle{sf::Style::Default};

@@ -63,49 +63,23 @@ void Application::Run() {
             ImGui::SFML::ProcessEvent(mWindow, event);
             switch (event.type) {
                 case sf::Event::Closed:
-                    mWindow.close();
+                    HandleEventClosed(event);
                     break;
 
                 case sf::Event::Resized:
-                    mView.setSize(static_cast<float>(event.size.width), static_cast<float>(event.size.height));
-                    mWindow.setView(mView);
+                    HandleEventResized(event);
                     break;
 
                 case sf::Event::MouseWheelScrolled:
-                    if (event.mouseWheelScroll.delta > 0) {
-                        mView.zoom(1 / 1.2f);
-                    }
-                    if (event.mouseWheelScroll.delta < 0) {
-                        mView.zoom(1.2f);
-                    }
-                    mWindow.setView(mView);
+                    HandleEventMouseWheelScrolled(event);
                     break;
 
                 case sf::Event::MouseButtonPressed:
-                    if (event.mouseButton.button == sf::Mouse::Left) {
-                        for (size_t softBodyIndex = 0; softBodyIndex < mSoftBodies.size(); ++softBodyIndex) {
-                            const SoftBody &softBody = mSoftBodies[softBodyIndex];
-                            for (size_t particleIndex = 0; particleIndex < softBody.particles.size(); ++particleIndex) {
-                                const Particle &particle = softBody.particles[particleIndex];
-                                const sf::Vector2f worldMousePosition = mWindow.mapPixelToCoords(sf::Mouse::getPosition(mWindow));
-                                const float distance = glm::length(glm::vec2(worldMousePosition.x - particle.position.x, worldMousePosition.y - particle.position.y));
-                                if (distance <= particle.radius) {
-                                    mIsSoftBodySelected = true;
-                                    mIsParticleSelected = true;
-                                    mSelectedSoftBodyIndex = softBodyIndex;
-                                    mSelectedParticleIndex = particleIndex;
-                                    break;
-                                }
-                            }
-                        }
-                    }
+                    HandleEventMouseButtonPressed(event);
                     break;
 
                 case sf::Event::MouseButtonReleased:
-                    if (event.mouseButton.button == sf::Mouse::Left) {
-                        mIsSoftBodySelected = false;
-                        mIsParticleSelected = false;
-                    }
+                    HandleEventMouseButtonReleased(event);
                     break;
 
                 default:
@@ -138,8 +112,8 @@ void Application::Run() {
             for (const Spring &spring: softBody.springs) {
                 sf::VertexArray line(sf::Lines, 2);
                 line[0].position.x = spring.mParticle1.position.x;
-                line[0].position.y = spring.mParticle1.position.y;
                 line[1].position.x = spring.mParticle2.position.x;
+                line[0].position.y = spring.mParticle1.position.y;
                 line[1].position.y = spring.mParticle2.position.y;
                 line[0].color = sf::Color(150, 150, 150);
                 line[1].color = sf::Color(150, 150, 150);
@@ -178,4 +152,50 @@ void Application::Run() {
     }
 
     ImGui::SFML::Shutdown();
+}
+
+void Application::HandleEventClosed(const sf::Event &event) {
+    mWindow.close();
+}
+
+void Application::HandleEventResized(const sf::Event &event) {
+    mView.setSize(static_cast<float>(event.size.width), static_cast<float>(event.size.height));
+    mWindow.setView(mView);
+}
+
+void Application::HandleEventMouseWheelScrolled(const sf::Event &event) {
+    if (event.mouseWheelScroll.delta > 0) {
+        mView.zoom(1 / 1.2f);
+    }
+    if (event.mouseWheelScroll.delta < 0) {
+        mView.zoom(1.2f);
+    }
+    mWindow.setView(mView);
+}
+
+void Application::HandleEventMouseButtonPressed(const sf::Event &event) {
+    if (event.mouseButton.button == sf::Mouse::Left) {
+        for (size_t softBodyIndex = 0; softBodyIndex < mSoftBodies.size(); ++softBodyIndex) {
+            const SoftBody &softBody = mSoftBodies[softBodyIndex];
+            for (size_t particleIndex = 0; particleIndex < softBody.particles.size(); ++particleIndex) {
+                const Particle &particle = softBody.particles[particleIndex];
+                const sf::Vector2f worldMousePosition = mWindow.mapPixelToCoords(sf::Mouse::getPosition(mWindow));
+                const float distance = glm::length(glm::vec2(worldMousePosition.x - particle.position.x, worldMousePosition.y - particle.position.y));
+                if (distance <= particle.radius) {
+                    mIsSoftBodySelected = true;
+                    mIsParticleSelected = true;
+                    mSelectedSoftBodyIndex = softBodyIndex;
+                    mSelectedParticleIndex = particleIndex;
+                    break;
+                }
+            }
+        }
+    }
+}
+
+void Application::HandleEventMouseButtonReleased(const sf::Event &event) {
+    if (event.mouseButton.button == sf::Mouse::Left) {
+        mIsSoftBodySelected = false;
+        mIsParticleSelected = false;
+    }
 }

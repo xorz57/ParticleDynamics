@@ -4,6 +4,7 @@
 #include "Spring.hpp"
 
 #include <SFML/Graphics/CircleShape.hpp>
+#include <SFML/Graphics/ConvexShape.hpp>
 #include <SFML/Graphics/VertexArray.hpp>
 #include <SFML/Window/Event.hpp>
 
@@ -15,20 +16,20 @@
 
 Application::Application() {
     mWindow.create(mMode, mTitle, mStyle, mSettings);
-    mWindow.setFramerateLimit(120u);
+    mWindow.setFramerateLimit(240u);
     mView = mWindow.getDefaultView();
-
-    const unsigned int rows = 16u;
-    const unsigned int cols = 16u;
-    const float padding = 16.0f;
-    const glm::vec2 position = 0.5f * glm::vec2(mMode.width, mMode.height) - 0.5f * padding * glm::vec2(cols - 1, rows - 1);
-    mSoftBodies.emplace_back(Cloth(position, rows, cols, padding));
 }
 
 void Application::Run() {
+    const unsigned int rows = 32u;
+    const unsigned int cols = 32u;
+    const float padding = 8.0f;
+    const glm::vec2 position = 0.5f * glm::vec2(mMode.width, mMode.height) - 0.5f * padding * glm::vec2(cols - 1, rows - 1);
+    mSoftBodies.emplace_back(Cloth(position, rows, cols, padding));
+
     (void) ImGui::SFML::Init(mWindow);
 
-    const sf::Time fixedDeltaTime = sf::seconds(1.0f / 64.0f);
+    const sf::Time fixedDeltaTime = sf::seconds(1.0f / 128.0f);
     float timeScale = 5.0f;
     sf::Time accumulator = sf::Time::Zero;
     sf::Clock deltaClock;
@@ -69,6 +70,27 @@ void Application::Run() {
         ImGui::End();
 
         mWindow.clear(sf::Color(25, 25, 25));
+
+        for (const SoftBody &softBody: mSoftBodies) {
+            sf::VertexArray clothSurface(sf::Triangles);
+            for (unsigned int i = 0; i < rows - 1; ++i) {
+                for (unsigned int j = 0; j < cols - 1; ++j) {
+                    const unsigned int index1 = i * cols + j;
+                    const unsigned int index2 = (i + 1) * cols + j;
+                    const unsigned int index3 = i * cols + (j + 1);
+                    const unsigned int index4 = (i + 1) * cols + (j + 1);
+                    const sf::Color color(80u, 80u, 80u);
+                    clothSurface.append(sf::Vertex(sf::Vector2f(softBody.particles[index1].position.x, softBody.particles[index1].position.y), color));
+                    clothSurface.append(sf::Vertex(sf::Vector2f(softBody.particles[index2].position.x, softBody.particles[index2].position.y), color));
+                    clothSurface.append(sf::Vertex(sf::Vector2f(softBody.particles[index3].position.x, softBody.particles[index3].position.y), color));
+
+                    clothSurface.append(sf::Vertex(sf::Vector2f(softBody.particles[index2].position.x, softBody.particles[index2].position.y), color));
+                    clothSurface.append(sf::Vertex(sf::Vector2f(softBody.particles[index4].position.x, softBody.particles[index4].position.y), color));
+                    clothSurface.append(sf::Vertex(sf::Vector2f(softBody.particles[index3].position.x, softBody.particles[index3].position.y), color));
+                }
+            }
+            mWindow.draw(clothSurface);
+        }
 
         for (const SoftBody &softBody: mSoftBodies) {
             for (const Spring &spring: softBody.springs) {

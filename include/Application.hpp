@@ -30,8 +30,8 @@ private:
     sf::ContextSettings mSettings{24u, 8u, 8u, 3u, 3u};
     sf::RenderWindow mWindow;
     sf::View mView;
-    glm::vec2 mGravitationalAcceleration{0.0f, 9.8f};
     std::vector<SoftBody> mSoftBodies;
+    glm::vec2 mGravitationalAcceleration{0.0f, 9.8f};
     bool mIsSoftBodySelected{false};
     bool mIsParticleSelected{false};
     size_t mSelectedSoftBodyIndex{0};

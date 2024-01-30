@@ -55,6 +55,19 @@ void Application::Run() {
 
         ImGui::SFML::Update(mWindow, deltaTime);
 
+        ImGui::Begin("Settings");
+        ImGui::DragFloat("Time Scale", &timeScale, 0.1f, 0.0f, 10.0f);
+        ImGui::DragFloat2("Gravity", glm::value_ptr(mGravitationalAcceleration), 0.1f, -9.8f, 9.8f);
+        ImGui::End();
+
+        ImGui::Begin("Statistics");
+        ImGui::Text("FPS               : %3.f", 1.0f / deltaTime.asSeconds());
+        ImGui::Text("Tick Rate         : %3.f", 1.0f / fixedDeltaTime.asSeconds());
+        ImGui::Text("Fixed Delta Time  : %3d ms", fixedDeltaTime.asMilliseconds());
+        ImGui::Text("Delta Time        : %3d ms", deltaTime.asMilliseconds());
+        ImGui::Text("Scaled Delta Time : %3d ms", scaledDeltaTime.asMilliseconds());
+        ImGui::End();
+
         mWindow.clear(sf::Color(25, 25, 25));
 
         for (const SoftBody &softBody: mSoftBodies) {
@@ -82,19 +95,6 @@ void Application::Run() {
                 mWindow.draw(shape);
             }
         }
-
-        ImGui::Begin("Settings");
-        ImGui::DragFloat("Time Scale", &timeScale, 0.1f, 0.0f, 10.0f);
-        ImGui::DragFloat2("Gravity", glm::value_ptr(mGravitationalAcceleration), 0.1f, -9.8f, 9.8f);
-        ImGui::End();
-
-        ImGui::Begin("Statistics");
-        ImGui::Text("FPS               : %3.f", 1.0f / deltaTime.asSeconds());
-        ImGui::Text("Tick Rate         : %3.f", 1.0f / fixedDeltaTime.asSeconds());
-        ImGui::Text("Fixed Delta Time  : %3d ms", fixedDeltaTime.asMilliseconds());
-        ImGui::Text("Delta Time        : %3d ms", deltaTime.asMilliseconds());
-        ImGui::Text("Scaled Delta Time : %3d ms", scaledDeltaTime.asMilliseconds());
-        ImGui::End();
 
         ImGui::SFML::Render(mWindow);
 

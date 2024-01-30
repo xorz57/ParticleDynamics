@@ -21,8 +21,8 @@ Application::Application() {
 }
 
 void Application::Run() {
-    const unsigned int rows = 32u;
-    const unsigned int cols = 32u;
+    const unsigned int rows = 16u;
+    const unsigned int cols = 16u;
     const float padding = 8.0f;
     const glm::vec2 position = 0.5f * glm::vec2(mMode.width, mMode.height) - 0.5f * padding * glm::vec2(cols - 1, rows - 1);
     mSoftBodies.emplace_back(Cloth(position, rows, cols, padding));
@@ -89,9 +89,6 @@ void Application::Run() {
                 }
             }
             mWindow.draw(clothSurface);
-        }
-
-        for (const SoftBody &softBody: mSoftBodies) {
             for (const Spring &spring: softBody.springs) {
                 sf::VertexArray line(sf::Lines, 2);
                 line[0].position.x = spring.mParticle1.position.x;

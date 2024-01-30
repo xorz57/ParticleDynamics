@@ -4,7 +4,7 @@ Cloth::Cloth(const glm::vec2 &position, unsigned int rows, unsigned int cols, fl
     for (unsigned int row = 0; row < rows; ++row) {
         for (unsigned int col = 0; col < cols; ++col) {
             const bool pinned = (row == 0) ? true : false;
-            particles.emplace_back(position + padding * glm::vec2(col, row), 1.0f, 2.0f, pinned);
+            particles.emplace_back(position + padding * glm::vec2(col, row), particleMass, particleRadius, pinned);
         }
     }
 
@@ -18,12 +18,12 @@ Cloth::Cloth(const glm::vec2 &position, unsigned int rows, unsigned int cols, fl
             if (col < cols - 1) {
                 Particle &particle1 = particles[row * cols + col];
                 Particle &particle2 = particles[row * cols + col + 1];
-                springs.emplace_back(particle1, particle2, distance(particle1, particle2), 256.0f, 2.0f);
+                springs.emplace_back(particle1, particle2, distance(particle1, particle2), springConstant, dampingConstant);
             }
             if (row < rows - 1) {
                 Particle &particle1 = particles[row * cols + col];
                 Particle &particle2 = particles[(row + 1) * cols + col];
-                springs.emplace_back(particle1, particle2, distance(particle1, particle2), 256.0f, 2.0f);
+                springs.emplace_back(particle1, particle2, distance(particle1, particle2), springConstant, dampingConstant);
             }
         }
     }

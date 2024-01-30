@@ -16,7 +16,7 @@
 
 Application::Application() {
     mWindow.create(mMode, mTitle, mStyle, mSettings);
-    mWindow.setFramerateLimit(240u);
+    mWindow.setFramerateLimit(60u);
     mView = mWindow.getDefaultView();
 }
 
@@ -83,7 +83,6 @@ void Application::Run() {
                     clothSurface.append(sf::Vertex(sf::Vector2f(softBody.particles[index1].position.x, softBody.particles[index1].position.y), color));
                     clothSurface.append(sf::Vertex(sf::Vector2f(softBody.particles[index2].position.x, softBody.particles[index2].position.y), color));
                     clothSurface.append(sf::Vertex(sf::Vector2f(softBody.particles[index3].position.x, softBody.particles[index3].position.y), color));
-
                     clothSurface.append(sf::Vertex(sf::Vector2f(softBody.particles[index2].position.x, softBody.particles[index2].position.y), color));
                     clothSurface.append(sf::Vertex(sf::Vector2f(softBody.particles[index4].position.x, softBody.particles[index4].position.y), color));
                     clothSurface.append(sf::Vertex(sf::Vector2f(softBody.particles[index3].position.x, softBody.particles[index3].position.y), color));

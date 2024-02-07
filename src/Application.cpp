@@ -62,8 +62,8 @@ void Application::Run() {
         ImGui::End();
 
         ImGui::Begin("Statistics");
-        ImGui::Text("FPS               : %3.f", 1.0f / deltaTime.asSeconds());
-        ImGui::Text("Tick Rate         : %3.f", 1.0f / fixedDeltaTime.asSeconds());
+        ImGui::Text("Frame Rate        : %3.f Hz", 1.0f / deltaTime.asSeconds());
+        ImGui::Text("Tick Rate         : %3.f Hz", 1.0f / fixedDeltaTime.asSeconds());
         ImGui::Text("Fixed Delta Time  : %3d ms", fixedDeltaTime.asMilliseconds());
         ImGui::Text("Delta Time        : %3d ms", deltaTime.asMilliseconds());
         ImGui::Text("Scaled Delta Time : %3d ms", scaledDeltaTime.asMilliseconds());

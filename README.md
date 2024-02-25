@@ -3,6 +3,10 @@
 [![Build](https://github.com/xorz57/ParticlePhysics/actions/workflows/Build.yml/badge.svg)](https://github.com/xorz57/ParticlePhysics/actions/workflows/Build.yml)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=xorz57_ParticlePhysics&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=xorz57_ParticlePhysics)
 
+## Screenshot
+
+![image](https://github.com/xorz57/ParticlePhysics/assets/84932056/08de9ef2-2660-4fbc-860e-fbabaa9e750a)
+
 ## Table of Contents
 
 - [Work in Progress](#work-in-progress)

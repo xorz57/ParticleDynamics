@@ -25,7 +25,7 @@ private:
     void FixedUpdate(const sf::Time &fixedDeltaTime);
 
     sf::VideoMode mMode{800u, 600u};
-    sf::String mTitle{"ParticlePhysics"};
+    sf::String mTitle{"Particle Physics"};
     sf::Uint32 mStyle{sf::Style::Default};
     sf::ContextSettings mSettings{24u, 8u, 8u, 3u, 3u};
     sf::RenderWindow mWindow;

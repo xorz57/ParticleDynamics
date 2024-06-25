@@ -4,6 +4,7 @@
 
 struct Spring {
     Spring(Particle &particle1, Particle &particle2, float restLength, float springConstant, float dampingConstant);
+
     Particle &mParticle1;
     Particle &mParticle2;
     float mRestLength{0.0f};

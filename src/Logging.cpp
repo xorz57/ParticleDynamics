@@ -5,7 +5,7 @@
 std::shared_ptr<spdlog::logger> Logging::sServerLogger;
 std::shared_ptr<spdlog::logger> Logging::sClientLogger;
 
-void Logging::Init() {
+void Logging::init() {
     spdlog::set_pattern("[%H:%M:%S %z] [%n] [%^---%L---%$] [thread %t] %v");
     sServerLogger = spdlog::stdout_color_mt("Engine");
     sClientLogger = spdlog::stdout_color_mt("Client");

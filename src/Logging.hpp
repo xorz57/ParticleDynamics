@@ -6,21 +6,21 @@
 
 class Logging {
 public:
-    static void Init();
-    inline static std::shared_ptr<spdlog::logger> &GetServerLogger() { return sServerLogger; }
-    inline static std::shared_ptr<spdlog::logger> &GetClientLogger() { return sClientLogger; }
+    static void init();
+    inline static std::shared_ptr<spdlog::logger> &getServerLogger() { return sServerLogger; }
+    inline static std::shared_ptr<spdlog::logger> &getClientLogger() { return sClientLogger; }
 
 private:
     static std::shared_ptr<spdlog::logger> sServerLogger;
     static std::shared_ptr<spdlog::logger> sClientLogger;
 };
 
-#define SERVER_TRACE(...) Logging::GetServerLogger()->trace(__VA_ARGS__)
-#define SERVER_INFO(...) Logging::GetServerLogger()->info(__VA_ARGS__)
-#define SERVER_WARN(...) Logging::GetServerLogger()->warn(__VA_ARGS__)
-#define SERVER_ERROR(...) Logging::GetServerLogger()->error(__VA_ARGS__)
+#define SERVER_TRACE(...) Logging::getServerLogger()->trace(__VA_ARGS__)
+#define SERVER_INFO(...) Logging::getServerLogger()->info(__VA_ARGS__)
+#define SERVER_WARN(...) Logging::getServerLogger()->warn(__VA_ARGS__)
+#define SERVER_ERROR(...) Logging::getServerLogger()->error(__VA_ARGS__)
 
-#define CLIENT_TRACE(...) Logging::GetClientLogger()->trace(__VA_ARGS__)
-#define CLIENT_INFO(...) Logging::GetClientLogger()->info(__VA_ARGS__)
-#define CLIENT_WARN(...) Logging::GetClientLogger()->warn(__VA_ARGS__)
-#define CLIENT_ERROR(...) Logging::GetClientLogger()->error(__VA_ARGS__)
+#define CLIENT_TRACE(...) Logging::getClientLogger()->trace(__VA_ARGS__)
+#define CLIENT_INFO(...) Logging::getClientLogger()->info(__VA_ARGS__)
+#define CLIENT_WARN(...) Logging::getClientLogger()->warn(__VA_ARGS__)
+#define CLIENT_ERROR(...) Logging::getClientLogger()->error(__VA_ARGS__)

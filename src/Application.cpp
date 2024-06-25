@@ -20,7 +20,7 @@ Application::Application() {
     mView = mWindow.getDefaultView();
 }
 
-void Application::Run() {
+void Application::run() {
     const unsigned int rows = 16u;
     const unsigned int cols = 16u;
     const float padding = 8.0f;
@@ -34,14 +34,14 @@ void Application::Run() {
     sf::Time accumulator = sf::Time::Zero;
     sf::Clock deltaClock;
     while (mWindow.isOpen()) {
-        ProcessEvents();
+        processEvents();
 
         const sf::Time deltaTime = deltaClock.restart();
         const sf::Time scaledDeltaTime = timeScale * deltaTime;
 
         accumulator += scaledDeltaTime;
         while (accumulator > fixedDeltaTime) {
-            FixedUpdate(fixedDeltaTime);
+            fixedUpdate(fixedDeltaTime);
             accumulator -= fixedDeltaTime;
         }
 
@@ -122,29 +122,29 @@ void Application::Run() {
     ImGui::SFML::Shutdown();
 }
 
-void Application::ProcessEvents() {
+void Application::processEvents() {
     sf::Event event{};
     while (mWindow.pollEvent(event)) {
         ImGui::SFML::ProcessEvent(mWindow, event);
         switch (event.type) {
             case sf::Event::Closed:
-                HandleEventClosed(event);
+                handleEventClosed(event);
                 break;
 
             case sf::Event::Resized:
-                HandleEventResized(event);
+                handleEventResized(event);
                 break;
 
             case sf::Event::MouseWheelScrolled:
-                HandleEventMouseWheelScrolled(event);
+                handleEventMouseWheelScrolled(event);
                 break;
 
             case sf::Event::MouseButtonPressed:
-                HandleEventMouseButtonPressed(event);
+                handleEventMouseButtonPressed(event);
                 break;
 
             case sf::Event::MouseButtonReleased:
-                HandleEventMouseButtonReleased(event);
+                handleEventMouseButtonReleased(event);
                 break;
 
             default:
@@ -153,16 +153,16 @@ void Application::ProcessEvents() {
     }
 }
 
-void Application::HandleEventClosed(const sf::Event &event) {
+void Application::handleEventClosed(const sf::Event &event) {
     mWindow.close();
 }
 
-void Application::HandleEventResized(const sf::Event &event) {
+void Application::handleEventResized(const sf::Event &event) {
     mView.setSize(static_cast<float>(event.size.width), static_cast<float>(event.size.height));
     mWindow.setView(mView);
 }
 
-void Application::HandleEventMouseWheelScrolled(const sf::Event &event) {
+void Application::handleEventMouseWheelScrolled(const sf::Event &event) {
     if (event.mouseWheelScroll.delta > 0.0f) {
         mView.zoom(1.0f / 1.05f);
     }
@@ -172,7 +172,7 @@ void Application::HandleEventMouseWheelScrolled(const sf::Event &event) {
     mWindow.setView(mView);
 }
 
-void Application::HandleEventMouseButtonPressed(const sf::Event &event) {
+void Application::handleEventMouseButtonPressed(const sf::Event &event) {
     if (event.mouseButton.button == sf::Mouse::Left) {
         for (size_t softBodyIndex = 0; softBodyIndex < mSoftBodies.size(); ++softBodyIndex) {
             const SoftBody &softBody = mSoftBodies[softBodyIndex];
@@ -193,14 +193,14 @@ void Application::HandleEventMouseButtonPressed(const sf::Event &event) {
     }
 }
 
-void Application::HandleEventMouseButtonReleased(const sf::Event &event) {
+void Application::handleEventMouseButtonReleased(const sf::Event &event) {
     if (event.mouseButton.button == sf::Mouse::Left) {
         mIsSoftBodySelected = false;
         mIsParticleSelected = false;
     }
 }
 
-void Application::FixedUpdate(const sf::Time &fixedDeltaTime) {
+void Application::fixedUpdate(const sf::Time &fixedDeltaTime) {
     const float dt = fixedDeltaTime.asSeconds();
     for (SoftBody &softBody: mSoftBodies) {
         for (Spring &spring: softBody.springs) {

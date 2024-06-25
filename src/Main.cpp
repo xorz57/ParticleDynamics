@@ -4,8 +4,8 @@
 #include <cstdlib>
 
 int main() {
-    Logging::Init();
+    Logging::init();
     Application application;
-    application.Run();
+    application.run();
     return EXIT_SUCCESS;
 }
